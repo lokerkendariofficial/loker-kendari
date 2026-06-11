@@ -2,133 +2,204 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loker Kendari - Lowongan Kerja Terpercaya di Sultra</title>
-    <meta name="description" content="Temukan lowongan kerja terbaru di Kendari dan seluruh Sulawesi Tenggara. Update setiap hari, gratis, dan terpercaya.">
+    <meta name="description" content="Lowongan kerja terbaru di Kendari dan seluruh Sulawesi Tenggara. Update setiap hari, gratis, terpercaya.">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://[USERNAME].github.io/[REPO-NAME]/">
-    <meta name="theme-color" content="#2c3e50">
+    <link rel="canonical" href="https://lokerkendariofficial.github.io/loker-kendari/">
     
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://[USERNAME].github.io/[REPO-NAME]/">
-    <meta property="og:title" content="Loker Kendari">
-    <meta property="og:description" content="Lowongan kerja terbaru di Kendari dan Sultra">
-    <meta property="og:image" content="https://[USERNAME].github.io/[REPO-NAME]/assets/images/og-image.webp">
-    
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    
-    <!-- JSON-LD untuk Organization (Lapis 3 SEO) -->
+    <!-- JSON-LD Organization (Lapis 3 SEO) -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "Loker Kendari",
-        "url": "https://[USERNAME].github.io/[REPO-NAME]/",
-        "logo": "https://[USERNAME].github.io/[REPO-NAME]/assets/images/logo.webp",
-        "description": "Platform lowongan kerja untuk wilayah Kendari dan Sultra",
-        "sameAs": [
-            "https://www.facebook.com/lokerkendari",
-            "https://www.instagram.com/lokerkendari"
-        ],
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "email": "admin@lokerkendari.com",
-            "contactType": "customer service"
+        "url": "https://lokerkendariofficial.github.io/loker-kendari/",
+        "logo": "https://lokerkendariofficial.github.io/loker-kendari/assets/images/logo.webp",
+        "description": "Portal lowongan kerja resmi dan terpercaya di Kota Kendari & sekitarnya.",
+        "email": "lokerkendariofficial@gmail.com",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Kendari",
+            "addressRegion": "Sulawesi Tenggara",
+            "addressCountry": "ID"
         }
     }
     </script>
     
-    <!-- Preconnect ke CDN (Lapis 2 Performa) -->
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-    
-    <!-- CSS (dengan media print agar tidak render-blocking) -->
-    <link rel="stylesheet" href="assets/css/style.css" media="all">
-    
-    <!-- Google Analytics 4 (Lapis 5 UX & Lapis 1 Monitoring) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-XXXXXXXXXX');
-    </script>
-    
-    <!-- Microsoft Clarity (Heatmap & Scroll depth) -->
-    <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "YOUR_CLARITY_ID");
-    </script>
+    <!-- CSS internal sementara (Lapis 2 & 5) -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            background: #f5f7fa;
+            color: #1a2a3a;
+        }
+        header {
+            background: #1e3a5f;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        nav a {
+            color: white;
+            margin-left: 1.5rem;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .hero {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .job-list h2 {
+            margin-bottom: 1rem;
+            border-left: 5px solid #1e3a5f;
+            padding-left: 1rem;
+        }
+        .job-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .job-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .job-card:hover {
+            transform: translateY(-3px);
+        }
+        .job-card h3 {
+            color: #1e3a5f;
+            margin-bottom: 0.5rem;
+        }
+        .job-card .company {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .job-card .deadline {
+            font-size: 0.85rem;
+            color: #e67e22;
+            margin: 0.5rem 0;
+        }
+        .btn {
+            display: inline-block;
+            background: #1e3a5f;
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .btn:hover {
+            background: #0f2b44;
+        }
+        footer {
+            background: #1e3a5f;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+        footer a {
+            color: #ffd966;
+            text-decoration: none;
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            nav a {
+                margin: 0 0.8rem;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
-        <div class="container">
-            <img src="assets/images/logo.webp" alt="Loker Kendari" width="200" height="60" loading="eager" class="logo">
-            <nav aria-label="Menu utama">
-                <ul>
-                    <li><a href="/" aria-current="page">Beranda</a></li>
-                    <li><a href="/lowongan">Semua Lowongan</a></li>
-                    <li><a href="/kontak">Kontak</a></li>
-                </ul>
-            </nav>
-            <button class="mobile-menu" aria-label="Menu" aria-expanded="false">☰</button>
-        </div>
+        <div class="logo">📢 Loker Kendari</div>
+        <nav aria-label="Menu utama">
+            <a href="/">Beranda</a>
+            <a href="#lowongan">Lowongan</a>
+            <a href="#tentang">Tentang</a>
+            <a href="/privacy.html">Privacy</a>
+        </nav>
     </header>
-    
+
     <main>
         <section class="hero">
-            <h1>Loker Kendari</h1>
-            <p>Lowongan kerja terbaru di Kendari dan Sulawesi Tenggara</p>
+            <h1>Lowongan Kerja Terpercaya di Kendari</h1>
+            <p>Temukan pekerjaan impian Anda di Sulawesi Tenggara. Update setiap hari, gratis, dan terverifikasi.</p>
         </section>
-        
-        <section class="job-list">
+
+        <section class="job-list" id="lowongan">
             <h2>🔥 Lowongan Hari Ini</h2>
             <div class="job-grid">
                 <article class="job-card">
                     <h3>Frontend Developer</h3>
-                    <p class="company">PT Teknologi Sultra - Kendari</p>
-                    <p class="deadline">Deadline: 30 Juni 2026</p>
-                    <a href="/lowongan/frontend-developer.html" class="btn" aria-label="Lihat detail Frontend Developer">Detail →</a>
+                    <div class="company">PT Teknologi Sultra - Kendari</div>
+                    <div class="deadline">📅 Deadline: 30 Juni 2026</div>
+                    <p>Membangun antarmuka web responsif dengan React.</p>
+                    <a href="/lowongan/frontend-developer.html" class="btn" aria-label="Detail lowongan Frontend Developer">Detail →</a>
                 </article>
                 <article class="job-card">
                     <h3>Admin Keuangan</h3>
-                    <p class="company">CV Maju Bersama - Kendari</p>
-                    <p class="deadline">Deadline: 25 Juni 2026</p>
-                    <a href="/lowongan/admin-keuangan.html" class="btn" aria-label="Lihat detail Admin Keuangan">Detail →</a>
+                    <div class="company">CV Maju Bersama - Kendari</div>
+                    <div class="deadline">📅 Deadline: 25 Juni 2026</div>
+                    <p>Mengelola pembukuan dan laporan keuangan.</p>
+                    <a href="/lowongan/admin-keuangan.html" class="btn" aria-label="Detail lowongan Admin Keuangan">Detail →</a>
+                </article>
+                <article class="job-card">
+                    <h3>Sales Marketing</h3>
+                    <div class="company">UD Berkah - Kendari</div>
+                    <div class="deadline">📅 Deadline: 28 Juni 2026</div>
+                    <p>Memasarkan produk UMKM ke berbagai mitra.</p>
+                    <a href="#" class="btn" aria-label="Detail lowongan Sales Marketing">Detail →</a>
                 </article>
             </div>
         </section>
-        
-        <section class="tips">
-            <h2>💡 Tips Melamar Kerja</h2>
-            <ul>
-                <li>Periksa kembali berkas lamaran Anda</li>
-                <li>Siapkan portofolio online</li>
-                <li>Ikuti instruksi pendaftaran dengan teliti</li>
-            </ul>
+
+        <section id="tentang" style="margin-top: 2rem;">
+            <h2>Tentang Loker Kendari</h2>
+            <p>Loker Kendari adalah portal lowongan kerja resmi dan terpercaya yang membantu pencari kerja di Kota Kendari dan seluruh Sulawesi Tenggara. Kami menyajikan informasi lowongan dari perusahaan terverifikasi secara gratis dan update setiap hari.</p>
+            <p>📧 Kontak: <a href="mailto:lokerkendariofficial@gmail.com">lokerkendariofficial@gmail.com</a></p>
         </section>
     </main>
-    
+
     <footer>
-        <div class="container">
-            <p>&copy; 2026 Loker Kendari. All rights reserved.</p>
-            <p><a href="/privacy.html">Kebijakan Privasi</a> | <a href="/sitemap.xml">Sitemap</a></p>
-        </div>
+        <p>&copy; 2026 Loker Kendari Official. <a href="/privacy.html">Kebijakan Privasi</a> | <a href="/sitemap.xml">Sitemap</a></p>
     </footer>
-    
-    <!-- Cookie Consent (CookieYes) – Lapis 4 Compliance -->
-    <script src="https://cdn-cookieyes.com/client.js"></script>
-    <script>
-        window.cookieyes = window.cookieyes || {};
-        window.cookieyes.id = "YOUR_COOKIEYES_API_KEY";
-    </script>
-    
-    <!-- JavaScript utama (defer) -->
-    <script src="assets/js/main.js" defer></script>
 </body>
 </html>
