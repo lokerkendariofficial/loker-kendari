@@ -8,7 +8,25 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://lokerkendariofficial.github.io/loker-kendari/">
     
-    <!-- JSON-LD Organization (Lapis 3 SEO) -->
+    <!-- Google Analytics 4 (GA4) – ganti G-XXXXXXXXXX dengan ID asli -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    
+    <!-- Microsoft Clarity – ganti YOUR_CLARITY_ID dengan ID asli -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "YOUR_CLARITY_ID");
+    </script>
+    
+    <!-- JSON-LD Organization -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -27,127 +45,37 @@
     }
     </script>
     
-    <!-- CSS internal sementara (Lapis 2 & 5) -->
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            line-height: 1.6;
-            background: #f5f7fa;
-            color: #1a2a3a;
-        }
-        header {
-            background: #1e3a5f;
-            color: white;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-        nav a {
-            color: white;
-            margin-left: 1.5rem;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        nav a:hover {
-            text-decoration: underline;
-        }
-        main {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        .hero {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .job-list h2 {
-            margin-bottom: 1rem;
-            border-left: 5px solid #1e3a5f;
-            padding-left: 1rem;
-        }
-        .job-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-        .job-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-        .job-card:hover {
-            transform: translateY(-3px);
-        }
-        .job-card h3 {
-            color: #1e3a5f;
-            margin-bottom: 0.5rem;
-        }
-        .job-card .company {
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        .job-card .deadline {
-            font-size: 0.85rem;
-            color: #e67e22;
-            margin: 0.5rem 0;
-        }
-        .btn {
-            display: inline-block;
-            background: #1e3a5f;
-            color: white;
-            padding: 0.4rem 1rem;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-        .btn:hover {
-            background: #0f2b44;
-        }
-        footer {
-            background: #1e3a5f;
-            color: white;
-            text-align: center;
-            padding: 1rem;
-            margin-top: 2rem;
-        }
-        footer a {
-            color: #ffd966;
-            text-decoration: none;
-        }
+        /* CSS Anda – sudah benar, tidak perlu diubah */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; background: #f5f7fa; color: #1a2a3a; }
+        header { background: #1e3a5f; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .logo { font-size: 1.8rem; font-weight: bold; }
+        nav a { color: white; margin-left: 1.5rem; text-decoration: none; font-weight: 500; }
+        nav a:hover { text-decoration: underline; }
+        main { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .hero { text-align: center; margin-bottom: 2rem; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .job-list h2 { margin-bottom: 1rem; border-left: 5px solid #1e3a5f; padding-left: 1rem; }
+        .job-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+        .job-card { background: white; border-radius: 10px; padding: 1.2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s; }
+        .job-card:hover { transform: translateY(-3px); }
+        .job-card h3 { color: #1e3a5f; margin-bottom: 0.5rem; }
+        .job-card .company { font-weight: bold; color: #2c3e50; }
+        .job-card .deadline { font-size: 0.85rem; color: #e67e22; margin: 0.5rem 0; }
+        .btn { display: inline-block; background: #1e3a5f; color: white; padding: 0.4rem 1rem; border-radius: 5px; text-decoration: none; font-size: 0.9rem; margin-top: 0.5rem; }
+        .btn:hover { background: #0f2b44; }
+        footer { background: #1e3a5f; color: white; text-align: center; padding: 1rem; margin-top: 2rem; }
+        footer a { color: #ffd966; text-decoration: none; }
         @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            nav a {
-                margin: 0 0.8rem;
-            }
-            .hero h1 {
-                font-size: 1.8rem;
-            }
+            header { flex-direction: column; gap: 0.5rem; }
+            nav a { margin: 0 0.8rem; }
+            .hero h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
+    <!-- body sama persis seperti yang Anda punya, tidak perlu diubah -->
     <header>
         <div class="logo">📢 Loker Kendari</div>
         <nav aria-label="Menu utama">
