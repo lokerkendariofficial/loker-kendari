@@ -7,7 +7,7 @@
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
     </url>
-    
+
     <!-- Halaman Lowongan 1: Frontend Developer -->
     <url>
         <loc>https://lokerkendariofficial.github.io/loker-kendari/lowongan/frontend-developer.html</loc>
@@ -15,7 +15,7 @@
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
-    
+
     <!-- Halaman Lowongan 2: Admin Keuangan -->
     <url>
         <loc>https://lokerkendariofficial.github.io/loker-kendari/lowongan/admin-keuangan.html</loc>
@@ -23,7 +23,15 @@
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
-    
+
+    <!-- Halaman Lowongan 3: Sales Marketing (tambahan) -->
+    <url>
+        <loc>https://lokerkendariofficial.github.io/loker-kendari/lowongan/sales-marketing.html</loc>
+        <lastmod>2026-06-12</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
     <!-- Halaman Kebijakan Privasi -->
     <url>
         <loc>https://lokerkendariofficial.github.io/loker-kendari/privacy.html</loc>
