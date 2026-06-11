@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Halaman Beranda -->
+    <url>
+        <loc>https://lokerkendariofficial.github.io/loker-kendari/</loc>
+        <lastmod>2026-06-11</lastmod>
+        <priority>1.0</priority>
+    </url>
+    
+    <!-- Halaman Lowongan 1 -->
+    <url>
+        <loc>https://lokerkendariofficial.github.io/loker-kendari/lowongan/frontend-developer.html</loc>
+        <lastmod>2026-06-11</lastmod>
+        <priority>0.8</priority>
+        <changefreq>weekly</changefreq>
+    </url>
+    
+    <!-- Halaman Lowongan 2 -->
+    <url>
+        <loc>https://lokerkendariofficial.github.io/loker-kendari/lowongan/admin-keuangan.html</loc>
+        <lastmod>2026-06-11</lastmod>
+        <priority>0.8</priority>
+        <changefreq>weekly</changefreq>
+    </url>
+    
+    <!-- (Nanti akan ditambah halaman privacy.html dan lainnya) -->
+</urlset>
