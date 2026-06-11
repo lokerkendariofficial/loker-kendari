@@ -1,0 +1,31 @@
+{
+  "lowongan": [
+    {
+      "id": 1,
+      "title": "Frontend Developer",
+      "company": "PT Teknologi Sultra",
+      "location": "Kendari",
+      "deadline": "30 Juni 2026",
+      "description": "Membangun antarmuka web responsif dengan React.",
+      "link": "/lowongan/frontend-developer.html"
+    },
+    {
+      "id": 2,
+      "title": "Admin Keuangan",
+      "company": "CV Maju Bersama",
+      "location": "Kendari",
+      "deadline": "25 Juni 2026",
+      "description": "Mengelola pembukuan dan laporan keuangan.",
+      "link": "/lowongan/admin-keuangan.html"
+    },
+    {
+      "id": 3,
+      "title": "Sales Marketing",
+      "company": "UD Berkah",
+      "location": "Kendari",
+      "deadline": "28 Juni 2026",
+      "description": "Memasarkan produk UMKM ke berbagai mitra.",
+      "link": "/lowongan/sales-marketing.html"
+    }
+  ]
+}
