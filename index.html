@@ -95,28 +95,8 @@
 
         <section class="job-list" id="lowongan">
             <h2>🔥 Lowongan Hari Ini</h2>
-            <div class="job-grid">
-                <article class="job-card">
-                    <h3>Frontend Developer</h3>
-                    <div class="company">PT Teknologi Sultra - Kendari</div>
-                    <div class="deadline">📅 Deadline: 30 Juni 2026</div>
-                    <p>Membangun antarmuka web responsif dengan React.</p>
-                    <a href="/lowongan/frontend-developer.html" class="btn" aria-label="Detail lowongan Frontend Developer">Detail →</a>
-                </article>
-                <article class="job-card">
-                    <h3>Admin Keuangan</h3>
-                    <div class="company">CV Maju Bersama - Kendari</div>
-                    <div class="deadline">📅 Deadline: 25 Juni 2026</div>
-                    <p>Mengelola pembukuan dan laporan keuangan.</p>
-                    <a href="/lowongan/admin-keuangan.html" class="btn" aria-label="Detail lowongan Admin Keuangan">Detail →</a>
-                </article>
-                <article class="job-card">
-                    <h3>Sales Marketing</h3>
-                    <div class="company">UD Berkah - Kendari</div>
-                    <div class="deadline">📅 Deadline: 28 Juni 2026</div>
-                    <p>Memasarkan produk UMKM ke berbagai mitra.</p>
-                    <a href="/lowongan/sales-marketing.html" class="btn" aria-label="Detail lowongan Sales Marketing">Detail →</a>
-                </article>
+            <div class="job-grid" id="jobGrid">
+                <p>Memuat lowongan...</p>
             </div>
         </section>
 
@@ -130,5 +110,50 @@
     <footer>
         <p>&copy; 2026 Loker Kendari Official. <a href="/privacy.html">Kebijakan Privasi</a> | <a href="/sitemap.xml">Sitemap</a></p>
     </footer>
+
+    <script>
+        // Fungsi untuk mengambil lowongan dari file JSON dan menampilkannya
+        async function loadJobs() {
+            try {
+                const response = await fetch('/loker-kendari/assets/data/lowongan.json');
+                const data = await response.json();
+                const jobGrid = document.getElementById('jobGrid');
+                
+                if (data.lowongan && data.lowongan.length > 0) {
+                    jobGrid.innerHTML = '';
+                    data.lowongan.forEach(job => {
+                        const jobCard = document.createElement('article');
+                        jobCard.className = 'job-card';
+                        jobCard.innerHTML = `
+                            <h3>${escapeHtml(job.title)}</h3>
+                            <div class="company">${escapeHtml(job.company)} - ${escapeHtml(job.location)}</div>
+                            <div class="deadline">📅 Deadline: ${escapeHtml(job.deadline)}</div>
+                            <p>${escapeHtml(job.description)}</p>
+                            <a href="${escapeHtml(job.link)}" class="btn" aria-label="Detail lowongan ${escapeHtml(job.title)}">Detail →</a>
+                        `;
+                        jobGrid.appendChild(jobCard);
+                    });
+                } else {
+                    jobGrid.innerHTML = '<p>Tidak ada lowongan saat ini. Cek lagi nanti.</p>';
+                }
+            } catch (error) {
+                console.error('Gagal memuat lowongan:', error);
+                document.getElementById('jobGrid').innerHTML = '<p>Gagal memuat lowongan. Silakan refresh halaman.</p>';
+            }
+        }
+
+        // Fungsi sederhana untuk mencegah XSS
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Panggil fungsi saat halaman dimuat
+        loadJobs();
+    </script>
 </body>
 </html>
