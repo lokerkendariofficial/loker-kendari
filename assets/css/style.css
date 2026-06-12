@@ -1,4 +1,4 @@
-/* style.css - Loker Kendari Template */
+/* style.css - Loker Kendari Template (Final) */
 * {
     margin: 0;
     padding: 0;
@@ -276,6 +276,42 @@ nav a:hover {
     text-align: center;
 }
 
+/* Profile Page Styles (tambahan) */
+.profile-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.applied-list {
+    list-style: none;
+    margin-top: 1rem;
+}
+
+.applied-list li {
+    background: #f8f9fa;
+    margin-bottom: 0.5rem;
+    padding: 0.7rem;
+    border-radius: 8px;
+    border-left: 4px solid #1e3a5f;
+}
+
+.note-text {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+/* Iklan Note (Pasang Iklan) */
+.iklan-note {
+    background: #fff3cd;
+    padding: 0.7rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #856404;
+}
+
 /* Footer */
 footer {
     background: #1e3a5f;
@@ -307,6 +343,9 @@ footer a {
         flex-direction: column;
     }
     .job-grid {
+        grid-template-columns: 1fr;
+    }
+    .profile-section {
         grid-template-columns: 1fr;
     }
 }
