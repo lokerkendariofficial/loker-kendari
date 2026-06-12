@@ -96,7 +96,6 @@ document.querySelectorAll('.sidebar-nav li[data-tab]').forEach(tab => {
         if (tabId === 'jobs') document.getElementById('tab-jobs').classList.add('active');
         if (tabId === 'analytics') document.getElementById('tab-analytics').classList.add('active');
         if (tabId === 'settings') document.getElementById('tab-settings').classList.add('active');
-        // tambahan mapping untuk menu lain (health, whatif dll) bisa diarahkan ke overview
         if (['health','whatif','inventory','space','power','cooling','connectivity'].includes(tabId)) {
             document.getElementById('tab-overview').classList.add('active');
         }
@@ -152,7 +151,7 @@ async function loadAllData() {
     } catch (err) {
         console.error(err);
         document.querySelectorAll('.kpi-value').forEach(el => el.innerText = 'Error');
-        document.getElementById('recentJobsTable').innerHTML = '<tr><td colspan="4">Gagal memuat data</td></tr>';
+        document.getElementById('recentJobsTable').innerHTML = '<tr><td colspan="4">Gagal memuat数据</tr>';
         document.getElementById('allJobsTable').innerHTML = '<tr><td colspan="7">Error loading</td></tr>';
     }
 }
@@ -170,22 +169,18 @@ function updateUI() {
         let d = new Date(j.timestamp);
         return !isNaN(d) && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
     }).length;
-    // KPI
     document.getElementById('totalJobs').innerText = total;
     document.getElementById('uniqueCompanies').innerText = uniqueCompanies;
     document.getElementById('monthJobs').innerText = thisMonthCount;
     document.getElementById('topLocation').innerText = topLocation;
-    // Badge last update
     document.getElementById('lastUpdateBadge').innerHTML = `Update: ${new Date().toLocaleString()}`;
     document.getElementById('csvUrlDisplay').innerText = CSV_URL;
     document.getElementById('lastUpdateTime').innerText = new Date().toLocaleString();
-    // Perusahaan terbanyak
     const companyCount = {};
     rawJobs.forEach(j => { companyCount[j.perusahaan] = (companyCount[j.perusahaan] || 0) + 1; });
     const topCompanyEntry = Object.entries(companyCount).sort((a,b) => b[1] - a[1])[0];
     document.getElementById('topCompany').innerText = topCompanyEntry ? `${topCompanyEntry[0]} (${topCompanyEntry[1]})` : '-';
     document.getElementById('topCityDetail').innerText = topLocation;
-    // Rata-rata per bulan
     const monthMap = {};
     rawJobs.forEach(j => {
         if (j.timestamp) {
@@ -199,14 +194,12 @@ function updateUI() {
     const values = Object.values(monthMap);
     const avg = values.length ? (values.reduce((a,b) => a+b,0)/values.length).toFixed(1) : 0;
     document.getElementById('avgPerMonth').innerText = avg;
-    // Tabel lowongan terbaru (5 data)
     let recent = [...rawJobs].sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0,5);
     let recentHtml = '';
     recent.forEach(j => {
         recentHtml += `<tr><td>${escapeHtml(j.timestamp)}</td><td>${escapeHtml(j.perusahaan)}</td><td>${escapeHtml(j.posisi)}</td><td>${escapeHtml(j.lokasi)}</td></tr>`;
     });
     document.getElementById('recentJobsTable').innerHTML = recentHtml || '<tr><td colspan="4">Tidak ada data</td></tr>';
-    // Tabel semua lowongan
     let allHtml = '';
     rawJobs.forEach((j, idx) => {
         allHtml += `<tr>
@@ -227,7 +220,6 @@ function updateUI() {
             alert(`Detail Lowongan\n\nPerusahaan: ${job.perusahaan}\nPosisi: ${job.posisi}\nLokasi: ${job.lokasi}\nDeskripsi: ${job.deskripsi.substring(0,200)}...\nEmail: ${job.email}\nDeadline: ${job.deadline}\nTanggal: ${job.timestamp}`);
         });
     });
-    // Grafik lowongan per bulan (batang)
     const sortedMonths = Object.keys(monthMap).sort();
     const monthLabels = sortedMonths.map(m => m);
     const monthData = sortedMonths.map(m => monthMap[m]);
@@ -238,7 +230,6 @@ function updateUI() {
         data: { labels: monthLabels, datasets: [{ label: 'Jumlah Lowongan', data: monthData, backgroundColor: '#1e3a5f' }] },
         options: { responsive: true, maintainAspectRatio: true }
     });
-    // Grafik bar lowongan per lokasi (top 5)
     const topLocs = Object.entries(lokasiCount).sort((a,b) => b[1] - a[1]).slice(0,5);
     const locLabels = topLocs.map(l => l[0]);
     const locData = topLocs.map(l => l[1]);
@@ -249,7 +240,6 @@ function updateUI() {
         data: { labels: locLabels, datasets: [{ label: 'Jumlah Lowongan', data: locData, backgroundColor: '#2c5f8a' }] },
         options: { indexAxis: 'y', responsive: true, maintainAspectRatio: true }
     });
-    // Pie chart distribusi tipe pekerjaan (jika ada kolom tipe)
     const typeCount = {};
     rawJobs.forEach(j => { let t = j.tipe || 'Lainnya'; typeCount[t] = (typeCount[t] || 0) + 1; });
     const typeLabels = Object.keys(typeCount);
@@ -261,7 +251,6 @@ function updateUI() {
         data: { labels: typeLabels, datasets: [{ data: typeData, backgroundColor: ['#1e3a5f','#3d7ca8','#5a9bc0','#7eb8d4','#a0c4e2'] }] },
         options: { responsive: true }
     });
-    // Line chart trend
     if (trendLineChart) trendLineChart.destroy();
     const lineCtx = document.getElementById('trendLineChart').getContext('2d');
     trendLineChart = new Chart(lineCtx, {
@@ -273,5 +262,4 @@ function updateUI() {
 
 function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
 
-// Init
 checkLogin();
