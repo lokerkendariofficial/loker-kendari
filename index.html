@@ -101,6 +101,7 @@
         <p>&copy; 2026 Loker Kendari Official. <a href="privacy.html">Kebijakan Privasi</a> | <a href="sitemap.xml">Sitemap</a></p>
     </footer>
 
+    <!-- ========== SCRIPT ASLI (CSV) – TETAP ADA ========== -->
     <script>
         let jobsData = [];
 
@@ -114,9 +115,8 @@
                 if (!response.ok) throw new Error('Gagal mengambil data');
                 const csvText = await response.text();
                 const rows = csvText.split('\n').filter(row => row.trim() !== '');
-                
+
                 if (rows.length < 2) {
-                    // Data kosong
                     jobGrid.innerHTML = `
                         <div style="text-align:center; padding:2rem;">
                             <p>✨ Belum ada lowongan terpasang.</p>
@@ -137,7 +137,6 @@
                 };
 
                 jobsData = rows.slice(1).map(row => {
-                    // Sederhana split, asumsi tidak ada koma dalam kutipan (untuk data awal sudah cukup)
                     const cols = row.split(',');
                     return {
                         title: (colIdx.posisi !== -1 && cols[colIdx.posisi]) ? cols[colIdx.posisi].trim() : 'Lowongan',
@@ -223,7 +222,81 @@
             });
         }
 
+        // Panggil fungsi awal (CSV)
         loadJobs();
+    </script>
+
+    <!-- ========== SCRIPT TAMBAHAN (OVERRIDE KE WEB APP) ========== -->
+    <script>
+        // URL Web App (doGet) - GANTI DENGAN URL ANDA
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyTnN21CN0LtEapwWhum1WYHm0G1Ku1dNZGtvQqypnkuvlgZOOF1UCB-cZMJcESDDNG/exec';
+
+        // Menyimpan referensi fungsi asli jika diperlukan (tidak digunakan, tapi aman)
+        const originalLoadJobs = window.loadJobs;
+
+        // Override fungsi loadJobs dan renderJobs dengan yang menggunakan API_URL
+        window.loadJobs = async function() {
+            const jobGrid = document.getElementById('jobGrid');
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Gagal mengambil data');
+                const data = await response.json();
+                const jobs = data.lowongan || [];
+                if (jobs.length === 0) {
+                    jobGrid.innerHTML = `
+                        <div style="text-align:center; padding:2rem;">
+                            <p>✨ Belum ada lowongan terpasang.</p>
+                            <p><a href="pasang.html" class="btn" style="margin-top:1rem;">📢 Pasang Iklan Lowongan</a></p>
+                        </div>`;
+                    return;
+                }
+                // Gunakan renderJobs baru
+                window.renderJobsOverride(jobs);
+            } catch (error) {
+                console.error('Error:', error);
+                jobGrid.innerHTML = `
+                    <div style="text-align:center; padding:2rem;">
+                        <p>⚠️ Gagal memuat lowongan. Pastikan koneksi internet lancar.</p>
+                        <p><button onclick="location.reload()" class="btn">Refresh Halaman</button></p>
+                    </div>`;
+            }
+        };
+
+        window.renderJobsOverride = function(jobs) {
+            const jobGrid = document.getElementById('jobGrid');
+            jobGrid.innerHTML = '';
+            jobs.forEach(job => {
+                // Mapping field dari objek spreadsheet (sesuaikan dengan nama kolom Anda)
+                const title = job['Posisi / Judul lowongan'] || job['Posisi'] || 'Lowongan';
+                const company = job['Nama perusahaan/Toko'] || job['Perusahaan'] || 'Perusahaan';
+                const location = job['Lokasi'] || 'Kendari';
+                const deadline = job['Deadline'] || 'Segera';
+                const description = job['Deskripsi'] || '';
+                const salary = job['Sistem Gaji'] || job['Gaji'] || 'Nego';
+                const datePosted = job['Timestamp'] ? job['Timestamp'].split(' ')[0] : 'Baru';
+                
+                const jobCard = document.createElement('article');
+                jobCard.className = 'job-card';
+                jobCard.innerHTML = `
+                    <h3>${escapeHtml(title)}</h3>
+                    <div class="company">${escapeHtml(company)} - ${escapeHtml(location)}</div>
+                    <div class="salary">💰 ${escapeHtml(salary)}</div>
+                    <div class="deadline">📅 Deadline: ${escapeHtml(deadline)}</div>
+                    <p>${escapeHtml(description.substring(0, 120))}${description.length > 120 ? '…' : ''}</p>
+                    <div class="meta">
+                        <a href="#" class="btn" aria-label="Detail lowongan ${escapeHtml(title)}">Detail →</a>
+                        <span class="date-posted">${escapeHtml(datePosted)}</span>
+                    </div>
+                `;
+                jobGrid.appendChild(jobCard);
+            });
+        };
+
+        // Override juga fungsi renderJobs asli agar tidak bentrok
+        window.renderJobs = window.renderJobsOverride;
+
+        // Panggil loadJobs yang baru (override)
+        window.loadJobs();
     </script>
 </body>
 </html>
