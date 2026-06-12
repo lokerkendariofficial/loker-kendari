@@ -3,7 +3,7 @@ const PASSWORD = '900900';
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5xtxnptjxh-FIyJuBoCct5vudZFFOeaisUUhT8X0R0kjAkY3f2CtD45CYcZjnPxGh52Og7_AXA756/pub?output=csv';
 
 let rawJobs = [];
-let monthlyChart, locationChart, miniMonthlyChart;
+let monthlyChart, locationBarChart, typePieChart, trendLineChart;
 
 // Login check
 function checkLogin() {
@@ -14,15 +14,13 @@ function checkLogin() {
         showLogin();
     }
 }
-
 function showLogin() {
     document.getElementById('loginOverlay').style.display = 'flex';
-    document.getElementById('dashboardWrapper').style.display = 'none';
+    document.getElementById('dashboardContainer').style.display = 'none';
 }
-
 function showDashboard() {
     document.getElementById('loginOverlay').style.display = 'none';
-    document.getElementById('dashboardWrapper').style.display = 'flex';
+    document.getElementById('dashboardContainer').style.display = 'flex';
 }
 
 // Login event
@@ -43,34 +41,43 @@ document.getElementById('loginBtn').addEventListener('click', () => {
 function logout() {
     sessionStorage.removeItem('owner_logged_in');
     showLogin();
-    document.getElementById('aksesCode').value = '';
-    document.getElementById('password').value = '';
 }
+document.getElementById('logoutBtnHeader')?.addEventListener('click', logout);
 document.getElementById('logoutBtnSidebar')?.addEventListener('click', logout);
-document.getElementById('refreshBtnTop')?.addEventListener('click', () => loadAllData());
+document.getElementById('refreshBtn')?.addEventListener('click', () => loadAllData());
 document.getElementById('forceRefreshBtn')?.addEventListener('click', () => loadAllData());
 
 // Tab navigation
-document.querySelectorAll('.sidebar-nav li').forEach(tab => {
+document.querySelectorAll('.sidebar-nav li[data-tab]').forEach(tab => {
     tab.addEventListener('click', () => {
         document.querySelectorAll('.sidebar-nav li').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         const tabId = tab.getAttribute('data-tab');
-        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-        document.getElementById(`tab-${tabId}`).classList.add('active');
-        if (tabId === 'analytics') {
-            // refresh chart jika perlu
-            if (locationChart) locationChart.update();
-            if (monthlyChart) monthlyChart.update();
+        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+        if (tabId === 'overview') document.getElementById('tab-overview').classList.add('active');
+        if (tabId === 'jobs') document.getElementById('tab-jobs').classList.add('active');
+        if (tabId === 'analytics') document.getElementById('tab-analytics').classList.add('active');
+        if (tabId === 'settings') document.getElementById('tab-settings').classList.add('active');
+        // tambahan mapping untuk menu lain (health, whatif dll) bisa diarahkan ke overview
+        if (['health','whatif','inventory','space','power','cooling','connectivity'].includes(tabId)) {
+            document.getElementById('tab-overview').classList.add('active');
         }
     });
 });
 
-// Main data loading
+// Clock
+function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').innerText = now.toLocaleTimeString('id-ID');
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Fetch CSV dan parse
 async function loadAllData() {
     try {
         const response = await fetch(CSV_URL);
-        if (!response.ok) throw new Error('Gagal fetch CSV');
+        if (!response.ok) throw new Error('Gagal fetch');
         const csvText = await response.text();
         const rows = csvText.split('\n').filter(r => r.trim() !== '');
         if (rows.length < 2) {
@@ -85,26 +92,28 @@ async function loadAllData() {
                 lokasi: headers.findIndex(h => h.includes('lokasi')),
                 deskripsi: headers.findIndex(h => h.includes('deskripsi')),
                 gaji: headers.findIndex(h => h.includes('gaji') || h.includes('sistem')),
-                deadline: headers.findIndex(h => h.includes('deadline') || h.includes('batas'))
+                deadline: headers.findIndex(h => h.includes('deadline') || h.includes('batas')),
+                tipe: headers.findIndex(h => h.includes('tipe') || h.includes('jenis'))
             };
             rawJobs = rows.slice(1).map(row => {
                 const cols = row.split(',');
                 return {
-                    timestamp: (col.timestamp !== -1 && cols[col.timestamp]) ? cols[col.timestamp].trim() : '',
-                    email: (col.email !== -1 && cols[col.email]) ? cols[col.email].trim() : '',
-                    perusahaan: (col.perusahaan !== -1 && cols[col.perusahaan]) ? cols[col.perusahaan].trim() : '',
-                    posisi: (col.posisi !== -1 && cols[col.posisi]) ? cols[col.posisi].trim() : '',
-                    lokasi: (col.lokasi !== -1 && cols[col.lokasi]) ? cols[col.lokasi].trim() : '',
-                    deskripsi: (col.deskripsi !== -1 && cols[col.deskripsi]) ? cols[col.deskripsi].trim() : '',
-                    gaji: (col.gaji !== -1 && cols[col.gaji]) ? cols[col.gaji].trim() : '',
-                    deadline: (col.deadline !== -1 && cols[col.deadline]) ? cols[col.deadline].trim() : ''
+                    timestamp: col.timestamp !== -1 ? (cols[col.timestamp] || '').trim() : '',
+                    email: col.email !== -1 ? (cols[col.email] || '').trim() : '',
+                    perusahaan: col.perusahaan !== -1 ? (cols[col.perusahaan] || '').trim() : '',
+                    posisi: col.posisi !== -1 ? (cols[col.posisi] || '').trim() : '',
+                    lokasi: col.lokasi !== -1 ? (cols[col.lokasi] || '').trim() : '',
+                    deskripsi: col.deskripsi !== -1 ? (cols[col.deskripsi] || '').trim() : '',
+                    gaji: col.gaji !== -1 ? (cols[col.gaji] || '').trim() : '',
+                    deadline: col.deadline !== -1 ? (cols[col.deadline] || '').trim() : '',
+                    tipe: col.tipe !== -1 ? (cols[col.tipe] || '').trim() : 'Lainnya'
                 };
             }).filter(j => j.perusahaan !== '');
         }
         updateUI();
     } catch (err) {
         console.error(err);
-        document.querySelectorAll('.stat-number').forEach(el => el.innerText = 'Error');
+        document.querySelectorAll('.kpi-value').forEach(el => el.innerText = 'Error');
         document.getElementById('recentJobsTable').innerHTML = '<tr><td colspan="4">Gagal memuat data</td></tr>';
         document.getElementById('allJobsTable').innerHTML = '<tr><td colspan="7">Error loading</td></tr>';
     }
@@ -114,41 +123,51 @@ function updateUI() {
     const total = rawJobs.length;
     const uniqueCompanies = new Set(rawJobs.map(j => j.perusahaan)).size;
     const lokasiCount = {};
-    rawJobs.forEach(j => { let loc = j.lokasi || 'Tidak diketahui'; lokasiCount[loc] = (lokasiCount[loc] || 0) + 1; });
-    const topLocation = Object.entries(lokasiCount).sort((a,b) => b[1] - a[1])[0];
+    rawJobs.forEach(j => { let l = j.lokasi || 'Tidak diketahui'; lokasiCount[l] = (lokasiCount[l] || 0) + 1; });
+    const topLocationEntry = Object.entries(lokasiCount).sort((a,b) => b[1] - a[1])[0];
+    const topLocation = topLocationEntry ? topLocationEntry[0] : '-';
     const currentMonth = new Date().getMonth();
     const currentYear = new Date().getFullYear();
     const thisMonthCount = rawJobs.filter(j => {
         let d = new Date(j.timestamp);
-        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+        return !isNaN(d) && d.getMonth() === currentMonth && d.getFullYear() === currentYear;
     }).length;
-
-    // Update stat cards
-    document.querySelectorAll('.stat-number')[0].innerText = total;
-    document.querySelectorAll('.stat-number')[1].innerText = uniqueCompanies;
-    if (topLocation) {
-        document.querySelectorAll('.stat-number')[2].innerHTML = `${topLocation[0]} <span style="font-size:0.8rem;">(${topLocation[1]})</span>`;
-    } else {
-        document.querySelectorAll('.stat-number')[2].innerText = '-';
-    }
-    document.querySelectorAll('.stat-number')[3].innerText = thisMonthCount;
-
-    // Update badges
+    // KPI
+    document.getElementById('totalJobs').innerText = total;
+    document.getElementById('uniqueCompanies').innerText = uniqueCompanies;
+    document.getElementById('monthJobs').innerText = thisMonthCount;
+    document.getElementById('topLocation').innerText = topLocation;
+    // Badge last update
     document.getElementById('lastUpdateBadge').innerHTML = `Update: ${new Date().toLocaleString()}`;
-    document.getElementById('analyticsTotal').innerText = total;
-    document.getElementById('analyticsCompanies').innerText = uniqueCompanies;
-    document.getElementById('analyticsTopCity').innerText = topLocation ? topLocation[0] : '-';
-    document.getElementById('analyticsLastUpdate').innerHTML = new Date().toLocaleString();
     document.getElementById('csvUrlDisplay').innerText = CSV_URL;
-
-    // Tabel terbaru (5 data)
+    document.getElementById('lastUpdateTime').innerText = new Date().toLocaleString();
+    // Perusahaan terbanyak
+    const companyCount = {};
+    rawJobs.forEach(j => { companyCount[j.perusahaan] = (companyCount[j.perusahaan] || 0) + 1; });
+    const topCompanyEntry = Object.entries(companyCount).sort((a,b) => b[1] - a[1])[0];
+    document.getElementById('topCompany').innerText = topCompanyEntry ? `${topCompanyEntry[0]} (${topCompanyEntry[1]})` : '-';
+    document.getElementById('topCityDetail').innerText = topLocation;
+    // Rata-rata per bulan
+    const monthMap = {};
+    rawJobs.forEach(j => {
+        if (j.timestamp) {
+            let d = new Date(j.timestamp);
+            if (!isNaN(d)) {
+                let key = `${d.getFullYear()}-${d.getMonth()+1}`;
+                monthMap[key] = (monthMap[key] || 0) + 1;
+            }
+        }
+    });
+    const values = Object.values(monthMap);
+    const avg = values.length ? (values.reduce((a,b) => a+b,0)/values.length).toFixed(1) : 0;
+    document.getElementById('avgPerMonth').innerText = avg;
+    // Tabel lowongan terbaru (5 data)
     let recent = [...rawJobs].sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0,5);
     let recentHtml = '';
     recent.forEach(j => {
         recentHtml += `<tr><td>${escapeHtml(j.timestamp)}</td><td>${escapeHtml(j.perusahaan)}</td><td>${escapeHtml(j.posisi)}</td><td>${escapeHtml(j.lokasi)}</td></tr>`;
     });
     document.getElementById('recentJobsTable').innerHTML = recentHtml || '<tr><td colspan="4">Tidak ada data</td></tr>';
-
     // Tabel semua lowongan
     let allHtml = '';
     rawJobs.forEach((j, idx) => {
@@ -159,7 +178,7 @@ function updateUI() {
             <td>${escapeHtml(j.posisi)}</td>
             <td>${escapeHtml(j.lokasi)}</td>
             <td>${escapeHtml(j.deadline)}</td>
-            <td><button class="view-btn" data-index="${idx}">👁️ Detail</button></td>
+            <td><button class="view-btn" data-index="${idx}">Detail</button></td>
         </tr>`;
     });
     document.getElementById('allJobsTable').innerHTML = allHtml || '<tr><td colspan="7">Tidak ada data</td></tr>';
@@ -170,16 +189,7 @@ function updateUI() {
             alert(`Detail Lowongan\n\nPerusahaan: ${job.perusahaan}\nPosisi: ${job.posisi}\nLokasi: ${job.lokasi}\nDeskripsi: ${job.deskripsi.substring(0,200)}...\nEmail: ${job.email}\nDeadline: ${job.deadline}\nTanggal: ${job.timestamp}`);
         });
     });
-
-    // Grafik bulanan
-    const monthMap = {};
-    rawJobs.forEach(j => {
-        if (j.timestamp) {
-            let d = new Date(j.timestamp);
-            let key = `${d.getFullYear()}-${d.getMonth()+1}`;
-            monthMap[key] = (monthMap[key] || 0) + 1;
-        }
-    });
+    // Grafik lowongan per bulan (batang)
     const sortedMonths = Object.keys(monthMap).sort();
     const monthLabels = sortedMonths.map(m => m);
     const monthData = sortedMonths.map(m => monthMap[m]);
@@ -190,23 +200,35 @@ function updateUI() {
         data: { labels: monthLabels, datasets: [{ label: 'Jumlah Lowongan', data: monthData, backgroundColor: '#1e3a5f' }] },
         options: { responsive: true, maintainAspectRatio: true }
     });
-    if (miniMonthlyChart) miniMonthlyChart.destroy();
-    const miniCtx = document.getElementById('miniMonthlyChart').getContext('2d');
-    miniMonthlyChart = new Chart(miniCtx, {
-        type: 'line',
-        data: { labels: monthLabels, datasets: [{ label: 'Tren', data: monthData, borderColor: '#1e3a5f', fill: false }] },
-        options: { responsive: true, maintainAspectRatio: true }
-    });
-
-    // Grafik lokasi (top 5)
+    // Grafik bar lowongan per lokasi (top 5)
     const topLocs = Object.entries(lokasiCount).sort((a,b) => b[1] - a[1]).slice(0,5);
     const locLabels = topLocs.map(l => l[0]);
     const locData = topLocs.map(l => l[1]);
-    if (locationChart) locationChart.destroy();
-    const locCtx = document.getElementById('locationChart').getContext('2d');
-    locationChart = new Chart(locCtx, {
+    if (locationBarChart) locationBarChart.destroy();
+    const locCtx = document.getElementById('locationBarChart').getContext('2d');
+    locationBarChart = new Chart(locCtx, {
+        type: 'bar',
+        data: { labels: locLabels, datasets: [{ label: 'Jumlah Lowongan', data: locData, backgroundColor: '#2c5f8a' }] },
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: true }
+    });
+    // Pie chart distribusi tipe pekerjaan (jika ada kolom tipe)
+    const typeCount = {};
+    rawJobs.forEach(j => { let t = j.tipe || 'Lainnya'; typeCount[t] = (typeCount[t] || 0) + 1; });
+    const typeLabels = Object.keys(typeCount);
+    const typeData = Object.values(typeCount);
+    if (typePieChart) typePieChart.destroy();
+    const pieCtx = document.getElementById('typePieChart').getContext('2d');
+    typePieChart = new Chart(pieCtx, {
         type: 'pie',
-        data: { labels: locLabels, datasets: [{ data: locData, backgroundColor: ['#1e3a5f','#2c5f8a','#3d7ca8','#5a9bc0','#7eb8d4'] }] },
+        data: { labels: typeLabels, datasets: [{ data: typeData, backgroundColor: ['#1e3a5f','#3d7ca8','#5a9bc0','#7eb8d4','#a0c4e2'] }] },
+        options: { responsive: true }
+    });
+    // Line chart trend
+    if (trendLineChart) trendLineChart.destroy();
+    const lineCtx = document.getElementById('trendLineChart').getContext('2d');
+    trendLineChart = new Chart(lineCtx, {
+        type: 'line',
+        data: { labels: monthLabels, datasets: [{ label: 'Tren Lowongan', data: monthData, borderColor: '#1e3a5f', fill: false }] },
         options: { responsive: true }
     });
 }
