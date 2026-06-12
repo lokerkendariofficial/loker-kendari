@@ -276,7 +276,7 @@ nav a:hover {
     text-align: center;
 }
 
-/* Profile Page Styles (dashboard & publik) */
+/* Profile Page Styles (tambahan) */
 .profile-section {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -310,107 +310,6 @@ nav a:hover {
     margin-top: 1rem;
     font-size: 0.85rem;
     color: #856404;
-}
-
-/* Tabel untuk dashboard owner (tambahan) */
-.table-responsive {
-    overflow-x: auto;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-}
-th, td {
-    border-bottom: 1px solid #eef2f6;
-    padding: 0.6rem 0.4rem;
-    text-align: left;
-}
-th {
-    background: #f8f9fa;
-    font-weight: 600;
-}
-.view-btn {
-    background: #1e3a5f;
-    color: white;
-    border: none;
-    padding: 0.2rem 0.6rem;
-    border-radius: 16px;
-    cursor: pointer;
-    font-size: 0.7rem;
-}
-.btn-confirm {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 0.2rem 0.6rem;
-    border-radius: 16px;
-    cursor: pointer;
-    font-size: 0.7rem;
-    margin-right: 0.3rem;
-}
-.btn-confirm:hover {
-    background-color: #1e7e34;
-}
-.btn-confirm:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-}
-
-/* Toggle Bypass Login (dashboard owner) */
-.toggle-login {
-    margin-bottom: 0.8rem;
-    padding: 0 0.5rem;
-}
-.switch-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: #1e3a5f;
-}
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 46px;
-    height: 24px;
-}
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.3s;
-    border-radius: 34px;
-}
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.3s;
-    border-radius: 50%;
-}
-input:checked + .slider {
-    background-color: #28a745;
-}
-input:checked + .slider:before {
-    transform: translateX(22px);
-}
-.toggle-text {
-    font-size: 0.75rem;
 }
 
 /* Footer */
