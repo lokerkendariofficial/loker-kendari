@@ -7,6 +7,63 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Style sementara untuk toggle (jika style.css belum ada, bisa dipindah nanti) -->
+    <style>
+        .toggle-login {
+            margin-bottom: 0.8rem;
+            padding: 0 0.5rem;
+        }
+        .switch-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #1e3a5f;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #28a745;
+        }
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+        .toggle-text {
+            font-size: 0.75rem;
+        }
+    </style>
 </head>
 <body>
     <div class="login-overlay" id="loginOverlay">
@@ -65,11 +122,21 @@
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
+                    <!-- TOMBOL ON/OFF BERADA DI SINI -->
+                    <div class="toggle-login">
+                        <label class="switch-label">
+                            <span class="toggle-text">🔐 Bypass Login</span>
+                            <label class="switch">
+                                <input type="checkbox" id="bypassLoginToggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </label>
+                    </div>
                     <button id="logoutBtnSidebar">Keluar</button>
                 </div>
             </aside>
 
-            <!-- Konten utama -->
+            <!-- Konten utama (semua konten tetap sama seperti aslinya) -->
             <main class="content">
                 <div class="content-header">
                     <h1>Enterprise Dashboard</h1>
