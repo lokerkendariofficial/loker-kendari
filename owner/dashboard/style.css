@@ -84,7 +84,7 @@ body {
 .sidebar-nav li.active { background: #e9ecef; color: #1e3a5f; border-left: 3px solid #1e3a5f; font-weight: 500; }
 .nav-header { font-size: 0.7rem; text-transform: uppercase; color: #6c757d; padding: 0.5rem 1rem 0.2rem; font-weight: 600; }
 .sidebar-footer { margin-top: auto; padding: 1rem; border-top: 1px solid #eef2f6; }
-.sidebar-footer button { width: 100%; background: #f8f9fa; border: 1px solid #ddd; padding: 0.5rem; border-radius: 8px; cursor: pointer; }
+.sidebar-footer button { width: 100%; background: #f8f9fa; border: 1px solid #ddd; padding: 0.5rem; border-radius: 8px; cursor: pointer; margin-bottom: 0.5rem; }
 
 /* Content */
 .content {
@@ -152,4 +152,60 @@ th { background: #f8f9fa; font-weight: 600; }
     .sidebar-nav li { text-align: center; font-size: 0.7rem; padding: 0.5rem; }
     .sidebar-nav .nav-header { display: none; }
     .row-2cols { grid-template-columns: 1fr; }
+}
+
+/* ========== TAMBAHAN: Toggle Bypass Login ========== */
+.toggle-login {
+    margin-bottom: 0.8rem;
+    padding: 0 0.5rem;
+}
+.switch-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #1e3a5f;
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.3s;
+    border-radius: 34px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: #28a745;
+}
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+.toggle-text {
+    font-size: 0.75rem;
 }
