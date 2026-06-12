@@ -233,7 +233,7 @@ function updateUI() {
         recentHtml += `<tr><td>${escapeHtml(j.timestamp)}</td><td>${escapeHtml(j.perusahaan)}</td><td>${escapeHtml(j.posisi)}</td><td>${escapeHtml(j.lokasi)}</td></tr>`;
     });
     document.getElementById('recentJobsTable').innerHTML = recentHtml || '<tr><td colspan="4">Tidak ada data</td></tr>';
-    
+
     // Tabel semua lowongan (dengan tombol Konfirmasi jika status belum diatur)
     let allHtml = '';
     rawJobs.forEach((j, idx) => {
@@ -253,7 +253,7 @@ function updateUI() {
         </tr>`;
     });
     document.getElementById('allJobsTable').innerHTML = allHtml || '<tr><td colspan="7">Tidak ada data</td></tr>';
-    
+
     // Event listener untuk tombol konfirmasi (antrean)
     document.querySelectorAll('.btn-confirm').forEach(btn => {
         btn.addEventListener('click', async (e) => {
@@ -269,7 +269,7 @@ function updateUI() {
             alert(`Detail Lowongan\n\nPerusahaan: ${job.perusahaan}\nPosisi: ${job.posisi}\nLokasi: ${job.lokasi}\nDeskripsi: ${job.deskripsi.substring(0,200)}...\nEmail: ${job.email}\nDeadline: ${job.deadline}\nTanggal: ${job.timestamp}`);
         });
     });
-    
+
     const sortedMonths = Object.keys(monthMap).sort();
     const monthLabels = sortedMonths.map(m => m);
     const monthData = sortedMonths.map(m => monthMap[m]);
