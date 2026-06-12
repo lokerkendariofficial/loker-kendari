@@ -1,1 +1,119 @@
-b
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Pengaturan - Owner Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+    <div class="login-overlay" id="loginOverlay" style="display: none;">
+        <div class="login-card">
+            <div class="login-icon">⚙️</div>
+            <h2>Akses Diperlukan</h2>
+            <p>Silakan login terlebih dahulu</p>
+            <button id="redirectLoginBtn">Kembali ke Login Dashboard</button>
+        </div>
+    </div>
+
+    <div class="settings-container" id="settingsContainer">
+        <div class="app-header">
+            <div class="logo-area">
+                <span class="brand">Loker Kendari®</span>
+                <span class="product">Settings</span>
+            </div>
+            <div class="header-menu">
+                <span onclick="location.href='../../index.html'">Dashboard</span>
+                <span>Visualization</span>
+                <span>Capacity</span>
+                <span>Assets</span>
+                <span>Connectivity</span>
+            </div>
+            <div class="header-right">
+                <span id="clock"></span>
+                <button id="logoutBtn" class="logout-icon">🚪</button>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <aside class="sidebar">
+                <div class="sidebar-search">
+                    <input type="text" placeholder="Search...">
+                </div>
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li class="nav-header">Standard</li>
+                        <li onclick="location.href='../../index.html'">📈 Enterprise Overview</li>
+                        <li>❤️ Enterprise Health</li>
+                        <li>🔮 What-if</li>
+                        <li>📦 Inventory</li>
+                        <li>🗄️ Space</li>
+                        <li>⚡ Power</li>
+                        <li>❄️ Cooling</li>
+                        <li>🔌 Connectivity</li>
+                        <li class="nav-header">Custom</li>
+                        <li onclick="location.href='../../index.html#tab-jobs'">📋 Lowongan</li>
+                        <li onclick="location.href='../../index.html#tab-analytics'">📊 Analytics</li>
+                        <li class="active">⚙️ Settings</li>
+                    </ul>
+                </nav>
+                <div class="sidebar-footer">
+                    <button id="logoutBtnSidebar">Keluar</button>
+                </div>
+            </aside>
+
+            <main class="content">
+                <div class="content-header">
+                    <h1>Pengaturan Dashboard</h1>
+                    <div class="actions">
+                        <button id="refreshSettingsBtn" class="action-btn">⟳ Refresh</button>
+                        <span id="lastUpdateBadge" class="badge">Memuat...</span>
+                    </div>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="card">
+                        <div class="card-title">🔗 Koneksi Data</div>
+                        <p>Dashboard terhubung ke Google Sheets (CSV publik).</p>
+                        <p>URL CSV:</p>
+                        <code id="csvUrlDisplay" class="csv-url"></code>
+                        <div class="button-group">
+                            <button id="testCsvBtn" class="btn-secondary">Uji Koneksi</button>
+                            <button id="forceRefreshBtn" class="btn-secondary">Refresh Data Sekarang</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">🗄️ Manajemen Data Lowongan</div>
+                        <p>Reset semua perubahan yang tersimpan di browser (override). Data akan kembali ke CSV asli.</p>
+                        <button id="resetLocalStorageBtn" class="btn-danger">Reset Semua Perubahan</button>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">🌐 Menu Pengguna (Publik)</div>
+                        <ul class="public-links">
+                            <li><a href="https://lokerkendariofficial.github.io/loker-kendari/pasang.html" target="_blank">📢 Pasang Iklan</a></li>
+                            <li><a href="https://lokerkendariofficial.github.io/loker-kendari/" target="_blank">🏠 Beranda</a></li>
+                            <li><a href="https://lokerkendariofficial.github.io/loker-kendari/profil.html" target="_blank">👤 Profil</a></li>
+                            <li><a href="#" id="editOwnPostingLink">✏️ Edit Postingan Saya (demo)</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">ℹ️ Informasi Sistem</div>
+                        <ul class="info-list">
+                            <li>Versi Dashboard: <strong>v2.0 (DCIM-style)</strong></li>
+                            <li>Owner: Loker Kendari Official</li>
+                            <li>Teknologi: HTML5, CSS3, JavaScript, Chart.js, Google Sheets (CSV)</li>
+                            <li>Status Login: <span id="loginStatus">Terverifikasi</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+</html>
