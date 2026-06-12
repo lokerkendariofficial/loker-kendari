@@ -5,8 +5,44 @@ const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5xtxnptjxh-FI
 let rawJobs = [];
 let monthlyChart, locationBarChart, typePieChart, trendLineChart;
 
-// Login check
+// ========== TAMBAHAN: BYPASS LOGIN TOGGLE ==========
+const BYPASS_KEY = 'owner_bypass_active';
+
+function isBypassActive() {
+    return localStorage.getItem(BYPASS_KEY) === 'true';
+}
+function setBypassActive(active) {
+    localStorage.setItem(BYPASS_KEY, active ? 'true' : 'false');
+}
+function updateToggleUI() {
+    const toggle = document.getElementById('bypassLoginToggle');
+    if (toggle) toggle.checked = isBypassActive();
+}
+function initBypassToggle() {
+    const toggle = document.getElementById('bypassLoginToggle');
+    if (!toggle) return;
+    toggle.addEventListener('change', function(e) {
+        const active = e.target.checked;
+        setBypassActive(active);
+        if (active) {
+            sessionStorage.setItem('owner_logged_in', 'true');
+            location.reload();
+        } else {
+            sessionStorage.removeItem('owner_logged_in');
+            location.reload();
+        }
+    });
+}
+// ====================================================
+
+// Login check (dimodifikasi)
 function checkLogin() {
+    if (isBypassActive()) {
+        sessionStorage.setItem('owner_logged_in', 'true');
+        showDashboard();
+        loadAllData();
+        return;
+    }
     if (sessionStorage.getItem('owner_logged_in') === 'true') {
         showDashboard();
         loadAllData();
@@ -21,6 +57,8 @@ function showLogin() {
 function showDashboard() {
     document.getElementById('loginOverlay').style.display = 'none';
     document.getElementById('dashboardContainer').style.display = 'flex';
+    updateToggleUI();
+    initBypassToggle();
 }
 
 // Login event
