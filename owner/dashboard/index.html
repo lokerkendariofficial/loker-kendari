@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Owner Dashboard - Loker Kendari</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container" id="loginContainer">
+        <div class="login-card">
+            <h2>🔐 Akses Owner</h2>
+            <p>Masukkan kode akses dan sandi</p>
+            <input type="text" id="aksesCode" placeholder="Kode Akses" autocomplete="off">
+            <input type="password" id="password" placeholder="Sandi">
+            <button id="loginBtn">Masuk Dashboard</button>
+            <div id="loginError" class="error-msg"></div>
+        </div>
+    </div>
+
+    <div class="dashboard-container" id="dashboardContainer" style="display: none;">
+        <header class="dashboard-header">
+            <h1>📊 Loker Kendari - Owner Dashboard</h1>
+            <button id="logoutBtn">🚪 Keluar</button>
+        </header>
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">Memuat statistik...</div>
+        </div>
+        <div class="data-section">
+            <h2>📋 Daftar Lowongan Terbaru</h2>
+            <div class="table-responsive">
+                <table id="jobsTable">
+                    <thead>
+                        <tr><th>Timestamp</th><th>Email</th><th>Perusahaan</th><th>Posisi</th><th>Lokasi</th><th>Status</th><th>Aksi</th></tr>
+                    </thead>
+                    <tbody id="jobsTableBody">
+                        <tr><td colspan="7">Memuat data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="refresh-info">
+            <button id="refreshBtn">🔄 Refresh Data</button>
+            <span id="lastUpdate"></span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
