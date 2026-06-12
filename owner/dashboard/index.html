@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Owner Dashboard - Loker Kendari</title>
+    <title>Loker Kendari · DCIM-style Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <!-- Chart.js untuk grafik -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -22,111 +21,154 @@
         </div>
     </div>
 
-    <div class="dashboard-wrapper" id="dashboardWrapper" style="display: none;">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <span class="logo">📡 Loker Kendari</span>
-                <span class="version">Owner v1.0</span>
+    <div class="dashboard-container" id="dashboardContainer" style="display: none;">
+        <!-- Header ala Sunbird -->
+        <div class="app-header">
+            <div class="logo-area">
+                <span class="brand">Loker Kendari®</span>
+                <span class="product">Dashboard</span>
             </div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li class="active" data-tab="overview">🏠 Overview</li>
-                    <li data-tab="jobs">📋 Semua Lowongan</li>
-                    <li data-tab="analytics">📈 Analytics</li>
-                    <li data-tab="settings">⚙️ Pengaturan</li>
-                </ul>
-            </nav>
-            <div class="sidebar-footer">
-                <button id="logoutBtnSidebar">🚪 Keluar</button>
+            <div class="header-menu">
+                <span>Dashboard</span>
+                <span>Visualization</span>
+                <span>Capacity</span>
+                <span>Assets</span>
+                <span>Connectivity</span>
             </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <header class="top-bar">
-                <h1>Enterprise Dashboard</h1>
-                <div class="top-bar-right">
-                    <span id="lastUpdateBadge" class="update-badge">Memuat...</span>
-                    <button id="refreshBtnTop" class="icon-btn">🔄</button>
-                </div>
-            </header>
-
-            <!-- Tab Overview -->
-            <div id="tab-overview" class="tab-content active">
-                <div class="stats-grid" id="statsGrid">
-                    <div class="stat-card"><div class="stat-title">Total Lowongan</div><div class="stat-number">-</div></div>
-                    <div class="stat-card"><div class="stat-title">Perusahaan Unik</div><div class="stat-number">-</div></div>
-                    <div class="stat-card"><div class="stat-title">Lokasi Terbanyak</div><div class="stat-number">-</div></div>
-                    <div class="stat-card"><div class="stat-title">Lowongan Bulan Ini</div><div class="stat-number">-</div></div>
-                </div>
-
-                <div class="chart-row">
-                    <div class="chart-card">
-                        <h3>📅 Tren Lowongan per Bulan</h3>
-                        <canvas id="monthlyChart" width="400" height="200"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <h3>🏢 Lowongan per Lokasi (Top 5)</h3>
-                        <canvas id="locationChart" width="400" height="200"></canvas>
-                    </div>
-                </div>
-
-                <div class="recent-table">
-                    <h3>📌 Lowongan Terbaru (5 data)</h3>
-                    <div class="table-responsive">
-                        <table id="recentJobsTable">
-                            <thead><tr><th>Tanggal</th><th>Perusahaan</th><th>Posisi</th><th>Lokasi</th></tr></thead>
-                            <tbody><tr><td colspan="4">Memuat...</td></tr></tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="header-right">
+                <span id="clock"></span>
+                <button id="logoutBtnHeader" class="logout-icon">🚪</button>
             </div>
+        </div>
 
-            <!-- Tab Semua Lowongan -->
-            <div id="tab-jobs" class="tab-content">
-                <div class="data-section">
-                    <h2>📋 Semua Lowongan</h2>
-                    <div class="table-responsive">
-                        <table id="allJobsTable">
-                            <thead><tr><th>Timestamp</th><th>Email</th><th>Perusahaan</th><th>Posisi</th><th>Lokasi</th><th>Deadline</th><th>Aksi</th></tr></thead>
-                            <tbody><tr><td colspan="7">Memuat...</td></tr></tbody>
-                        </table>
+        <div class="main-layout">
+            <!-- Sidebar kiri -->
+            <aside class="sidebar">
+                <div class="sidebar-search">
+                    <input type="text" placeholder="Search Dashboards...">
+                </div>
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li class="nav-header">Standard</li>
+                        <li class="active" data-tab="overview">📈 Enterprise Overview</li>
+                        <li data-tab="health">❤️ Enterprise Health</li>
+                        <li data-tab="whatif">🔮 What-if</li>
+                        <li data-tab="inventory">📦 Inventory</li>
+                        <li data-tab="space">🗄️ Space</li>
+                        <li data-tab="power">⚡ Power</li>
+                        <li data-tab="cooling">❄️ Cooling</li>
+                        <li data-tab="connectivity">🔌 Connectivity</li>
+                        <li class="nav-header">Custom</li>
+                        <li data-tab="jobs">📋 Lowongan</li>
+                        <li data-tab="analytics">📊 Analytics</li>
+                        <li data-tab="settings">⚙️ Settings</li>
+                    </ul>
+                </nav>
+                <div class="sidebar-footer">
+                    <button id="logoutBtnSidebar">Keluar</button>
+                </div>
+            </aside>
+
+            <!-- Konten utama -->
+            <main class="content">
+                <div class="content-header">
+                    <h1>Enterprise Dashboard</h1>
+                    <div class="actions">
+                        <button id="refreshBtn" class="action-btn">⟳ Refresh</button>
+                        <span id="lastUpdateBadge" class="badge">Memuat...</span>
                     </div>
                 </div>
-            </div>
 
-            <!-- Tab Analytics (detail) -->
-            <div id="tab-analytics" class="tab-content">
-                <div class="analytics-grid">
-                    <div class="info-card">
-                        <h3>📊 Performa Website</h3>
-                        <ul>
-                            <li>📢 Total Lowongan: <span id="analyticsTotal">-</span></li>
-                            <li>🏢 Perusahaan Aktif: <span id="analyticsCompanies">-</span></li>
-                            <li>📍 Kota dengan Lowongan Terbanyak: <span id="analyticsTopCity">-</span></li>
-                            <li>🕒 Update Terakhir: <span id="analyticsLastUpdate">-</span></li>
-                        </ul>
+                <!-- Tab Overview (default) -->
+                <div id="tab-overview" class="tab-pane active">
+                    <!-- Rack Units Fragmentation style -> Grafik Lowongan per Bulan -->
+                    <div class="card">
+                        <div class="card-title">Lowongan per Bulan</div>
+                        <div class="card-controls">
+                            <span>Limit to</span>
+                            <select id="monthLimit"><option>Top 10</option></select>
+                        </div>
+                        <canvas id="monthlyChart" height="200"></canvas>
                     </div>
-                    <div class="info-card">
-                        <h3>📈 Distribusi Lowongan per Bulan</h3>
-                        <div class="mini-chart-container">
-                            <canvas id="miniMonthlyChart" width="300" height="150"></canvas>
+
+                    <!-- Dua kolom: Potential New Items + Rack Units Usage By Rail -->
+                    <div class="row-2cols">
+                        <div class="card">
+                            <div class="card-title">Potential New Items</div>
+                            <div class="kpi-grid" id="kpiGrid">
+                                <div class="kpi-item"><span class="kpi-label">Total Lowongan</span><span class="kpi-value" id="totalJobs">-</span></div>
+                                <div class="kpi-item"><span class="kpi-label">Perusahaan Unik</span><span class="kpi-value" id="uniqueCompanies">-</span></div>
+                                <div class="kpi-item"><span class="kpi-label">Lowongan Bulan Ini</span><span class="kpi-value" id="monthJobs">-</span></div>
+                                <div class="kpi-item"><span class="kpi-label">Lokasi Terbanyak</span><span class="kpi-value" id="topLocation">-</span></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Lowongan per Lokasi (Top 5)</div>
+                            <canvas id="locationBarChart" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Rack Units Usage By Type (pie chart) -->
+                    <div class="card">
+                        <div class="card-title">Distribusi Tipe Pekerjaan (jika ada)</div>
+                        <canvas id="typePieChart" height="180"></canvas>
+                    </div>
+
+                    <!-- Tabel lowongan terbaru -->
+                    <div class="card">
+                        <div class="card-title">📋 Lowongan Terbaru</div>
+                        <div class="table-responsive">
+                            <table id="recentJobsTable">
+                                <thead><tr><th>Tanggal</th><th>Perusahaan</th><th>Posisi</th><th>Lokasi</th></tr></thead>
+                                <tbody><tr><td colspan="4">Memuat...</td></tr></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Tab Pengaturan (placeholder) -->
-            <div id="tab-settings" class="tab-content">
-                <div class="info-card">
-                    <h3>⚙️ Pengaturan Dashboard</h3>
-                    <p>Dashboard terhubung ke Google Sheets secara real-time.</p>
-                    <p>URL CSV: <code id="csvUrlDisplay"></code></p>
-                    <button id="forceRefreshBtn" class="btn-secondary">Refresh Data Sekarang</button>
+                <!-- Tab Lowongan (semua lowongan) -->
+                <div id="tab-jobs" class="tab-pane">
+                    <div class="card">
+                        <div class="card-title">Semua Lowongan</div>
+                        <div class="table-responsive">
+                            <table id="allJobsTable" width="100%">
+                                <thead><tr><th>Timestamp</th><th>Email</th><th>Perusahaan</th><th>Posisi</th><th>Lokasi</th><th>Deadline</th><th>Aksi</th></tr></thead>
+                                <tbody><tr><td colspan="7">Memuat...</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </main>
+
+                <!-- Tab Analytics (statistik lebih detail) -->
+                <div id="tab-analytics" class="tab-pane">
+                    <div class="row-2cols">
+                        <div class="card">
+                            <div class="card-title">Statistik Lanjutan</div>
+                            <ul class="stats-list">
+                                <li>📊 Rata-rata lowongan per bulan: <span id="avgPerMonth">-</span></li>
+                                <li>🏢 Perusahaan dengan lowongan terbanyak: <span id="topCompany">-</span></li>
+                                <li>📍 Kota terpopuler: <span id="topCityDetail">-</span></li>
+                                <li>🕒 Update terakhir: <span id="lastUpdateTime">-</span></li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <div class="card-title">Tren Lowongan (Line)</div>
+                            <canvas id="trendLineChart" height="180"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Settings -->
+                <div id="tab-settings" class="tab-pane">
+                    <div class="card">
+                        <div class="card-title">Pengaturan Dashboard</div>
+                        <p>Dashboard terhubung ke Google Sheets.</p>
+                        <p>URL CSV: <code id="csvUrlDisplay" style="word-break:break-all;"></code></p>
+                        <button id="forceRefreshBtn" class="btn-secondary">Refresh Data Sekarang</button>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
 
     <script src="script.js"></script>
