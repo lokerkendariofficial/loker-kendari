@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Saya - Loker Kendari</title>
+    <meta name="description" content="Kelola profil dan lihat riwayat lamaran Anda di Loker Kendari.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lokerkendariofficial.github.io/loker-kendari/profil.html">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Gaya tambahan khusus untuk profil (opsional, bisa dipindah ke style.css) */
+        .profile-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .applied-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+        .applied-list li {
+            background: #f8f9fa;
+            margin-bottom: 0.5rem;
+            padding: 0.7rem;
+            border-radius: 8px;
+            border-left: 4px solid #1e3a5f;
+        }
+        @media (max-width: 768px) {
+            .profile-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="assets/images/logo12_26_15436.png" alt="Loker Kendari" width="200" height="60">
+        </div>
+        <nav>
+            <a href="/">Beranda</a>
+            <a href="lowongan.html">Lowongan</a>
+            <a href="kontak.html">Kontak</a>
+            <a href="pasang.html">Pasang Iklan</a>
+            <a href="profil.html">Profil</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="profile-section">
+            <div class="form-card">
+                <h2>Profil Saya</h2>
+                <form action="#" method="post">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" value="user@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="telepon">Telepon</label>
+                        <input type="tel" id="telepon" name="telepon" value="08123456789">
+                    </div>
+                    <button type="submit" class="btn-submit">Simpan Perubahan</button>
+                </form>
+            </div>
+            <div class="form-card">
+                <h2>Lamaran yang Dikirim</h2>
+                <ul class="applied-list">
+                    <li><strong>Frontend Developer</strong> - PT Teknologi Sultra</li>
+                    <li><strong>Admin Keuangan</strong> - CV Maju Bersama</li>
+                    <li><strong>Sales Marketing</strong> - UD Berkah</li>
+                </ul>
+                <p style="margin-top: 1rem; font-size: 0.85rem; color: #666;">Kirim lamaran baru dari halaman lowongan.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Loker Kendari Official. <a href="privacy.html">Kebijakan Privasi</a> | <a href="sitemap.xml">Sitemap</a></p>
+    </footer>
+</body>
+</html>
