@@ -46,7 +46,6 @@
     }
     </script>
 
-    <!-- CSS External -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -93,8 +92,8 @@
 
         <section id="tentang">
             <h2>Tentang Loker Kendari</h2>
-            <p>Loker Kendari adalah portal lowongan kerja resmi dan terpercaya yang membantu pencari kerja di Kota Kendari dan seluruh Sulawesi Tenggara. Kami menyajikan informasi lowongan dari perusahaan terverifikasi secara gratis dan update setiap hari.</p>
-            <p>📧 Kontak: <a href="mailto:lokerkendariofficial@gmail.com">lokerkendariofficial@gmail.com</a> | 📞 6289531896628</p>
+            <p>Loker Kendari adalah portal lowongan kerja resmi dan terpercaya ...</p>
+            <p>📧 <a href="mailto:lokerkendariofficial@gmail.com">lokerkendariofficial@gmail.com</a> | 📞 6289531896628</p>
         </section>
     </main>
 
@@ -103,82 +102,115 @@
     </footer>
 
     <script>
-    let jobsData = [];
+        let jobsData = [];
 
-    async function loadJobs() {
-        try {
-            const response = await fetch('assets/data/lowongan.json');
-            const data = await response.json();
-            jobsData = data.lowongan || [];
-            renderJobs(jobsData);
-        } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('jobGrid').innerHTML = '<p>Gagal memuat lowongan. Silakan refresh halaman.</p>';
-        }
-    }
+        // GANTI URL_INI dengan URL publik CSV dari Google Sheets (File -> Share -> Publish to web -> CSV)
+        const CSV_URL = 'URL_CSV_DARI_GOOGLE_SHEETS'; 
 
-    function renderJobs(jobs) {
-        const jobGrid = document.getElementById('jobGrid');
-        if (jobs.length === 0) {
-            jobGrid.innerHTML = '<p>Tidak ada lowongan yang sesuai.</p>';
-            return;
-        }
-        jobGrid.innerHTML = '';
-        jobs.forEach(job => {
-            const jobCard = document.createElement('article');
-            jobCard.className = 'job-card';
-            jobCard.innerHTML = `
-                <h3>${escapeHtml(job.title)}</h3>
-                <div class="company">${escapeHtml(job.company)} - ${escapeHtml(job.location)}</div>
-                <div class="salary">💰 ${escapeHtml(job.salary || 'Nego')}</div>
-                <div class="deadline">📅 Deadline: ${escapeHtml(job.deadline)}</div>
-                <p>${escapeHtml(job.description)}</p>
-                <div class="meta">
-                    <a href="${escapeHtml(job.link)}" class="btn" aria-label="Detail lowongan ${escapeHtml(job.title)}">Detail →</a>
-                    <span class="date-posted">${escapeHtml(job.date_posted || 'Baru')}</span>
-                </div>
-            `;
-            jobGrid.appendChild(jobCard);
-        });
-    }
-
-    function filterJobs() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-cat');
-        const filtered = jobsData.filter(job => {
-            const matchSearch = job.title.toLowerCase().includes(searchTerm) || job.company.toLowerCase().includes(searchTerm);
-            let matchCategory = (activeCategory === 'all');
-            if (!matchCategory) {
-                matchCategory = (job.category && job.category === activeCategory);
+        async function loadJobs() {
+            try {
+                const response = await fetch(CSV_URL);
+                const csvText = await response.text();
+                const rows = csvText.split('\n').filter(row => row.trim() !== '');
+                if (rows.length < 2) throw new Error('Data kosong');
+                
+                // Baris pertama adalah header
+                const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
+                // Cari indeks kolom penting (sesuaikan dengan nama kolom di sheet Anda)
+                const colIdx = {
+                    timestamp: headers.findIndex(h => h.includes('timestamp')),
+                    email: headers.findIndex(h => h.includes('email')),
+                    perusahaan: headers.findIndex(h => h.includes('nama perusahaan') || h.includes('perusahaan')),
+                    posisi: headers.findIndex(h => h.includes('posisi') || h.includes('judul')),
+                    lokasi: headers.findIndex(h => h.includes('lokasi')),
+                    deskripsi: headers.findIndex(h => h.includes('deskripsi')),
+                    gaji: headers.findIndex(h => h.includes('gaji') || h.includes('sistem')),
+                    deadline: headers.findIndex(h => h.includes('deadline') || h.includes('batas'))
+                };
+                
+                jobsData = rows.slice(1).map(row => {
+                    const cols = row.split(',');
+                    return {
+                        title: cols[colIdx.posisi] ? cols[colIdx.posisi].trim() : 'Lowongan',
+                        company: cols[colIdx.perusahaan] ? cols[colIdx.perusahaan].trim() : 'Perusahaan',
+                        location: cols[colIdx.lokasi] ? cols[colIdx.lokasi].trim() : 'Kendari',
+                        deadline: cols[colIdx.deadline] ? cols[colIdx.deadline].trim() : 'Segera',
+                        description: cols[colIdx.deskripsi] ? cols[colIdx.deskripsi].trim() : '',
+                        salary: cols[colIdx.gaji] ? cols[colIdx.gaji].trim() : 'Nego',
+                        link: '#', // bisa diarahkan ke halaman kontak atau detail dinamis
+                        date_posted: cols[colIdx.timestamp] ? cols[colIdx.timestamp].split(' ')[0] : 'Baru'
+                    };
+                }).filter(job => job.title && job.title !== 'Lowongan');
+                
+                renderJobs(jobsData);
+            } catch (error) {
+                console.error('Gagal memuat lowongan:', error);
+                document.getElementById('jobGrid').innerHTML = '<p>Gagal memuat lowongan. Pastikan URL CSV benar dan data tersedia.</p>';
             }
-            return matchSearch && matchCategory;
-        });
-        renderJobs(filtered);
-    }
+        }
 
-    document.querySelectorAll('.category-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            filterJobs();
-        });
-    });
-    document.getElementById('searchBtn').addEventListener('click', filterJobs);
-    document.getElementById('searchInput').addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') filterJobs();
-    });
+        function renderJobs(jobs) {
+            const jobGrid = document.getElementById('jobGrid');
+            if (jobs.length === 0) {
+                jobGrid.innerHTML = '<p>Tidak ada lowongan saat ini.</p>';
+                return;
+            }
+            jobGrid.innerHTML = '';
+            jobs.forEach(job => {
+                const jobCard = document.createElement('article');
+                jobCard.className = 'job-card';
+                jobCard.innerHTML = `
+                    <h3>${escapeHtml(job.title)}</h3>
+                    <div class="company">${escapeHtml(job.company)} - ${escapeHtml(job.location)}</div>
+                    <div class="salary">💰 ${escapeHtml(job.salary)}</div>
+                    <div class="deadline">📅 Deadline: ${escapeHtml(job.deadline)}</div>
+                    <p>${escapeHtml(job.description.substring(0, 120))}${job.description.length > 120 ? '…' : ''}</p>
+                    <div class="meta">
+                        <a href="${escapeHtml(job.link)}" class="btn" aria-label="Detail lowongan ${escapeHtml(job.title)}">Detail →</a>
+                        <span class="date-posted">${escapeHtml(job.date_posted)}</span>
+                    </div>
+                `;
+                jobGrid.appendChild(jobCard);
+            });
+        }
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
+        function filterJobs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-cat');
+            const filtered = jobsData.filter(job => {
+                const matchSearch = job.title.toLowerCase().includes(searchTerm) || job.company.toLowerCase().includes(searchTerm);
+                let matchCategory = (activeCategory === 'all');
+                if (!matchCategory) {
+                    matchCategory = (job.category && job.category === activeCategory);
+                }
+                return matchSearch && matchCategory;
+            });
+            renderJobs(filtered);
+        }
 
-    loadJobs();
-</script>
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filterJobs();
+            });
+        });
+        document.getElementById('searchBtn').addEventListener('click', filterJobs);
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') filterJobs();
+        });
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        loadJobs();
+    </script>
 </body>
 </html>
