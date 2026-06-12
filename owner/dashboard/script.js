@@ -2,10 +2,13 @@ const ACCESS_CODE = '900900';
 const PASSWORD = '900900';
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5xtxnptjxh-FIyJuBoCct5vudZFFOeaisUUhT8X0R0kjAkY3f2CtD45CYcZjnPxGh52Og7_AXA756/pub?output=csv';
 
+// URL Web App Google Apps Script untuk antrean
+const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyTnN21CN0LtEapwWhum1WYHm0G1Ku1dNZGtvQqypnkuvlgZOOF1UCB-cZMJcESDDNG/exec';
+
 let rawJobs = [];
 let monthlyChart, locationBarChart, typePieChart, trendLineChart;
 
-// ========== TAMBAHAN: BYPASS LOGIN TOGGLE ==========
+// ========== BYPASS LOGIN TOGGLE ==========
 const BYPASS_KEY = 'owner_bypass_active';
 
 function isBypassActive() {
@@ -33,9 +36,9 @@ function initBypassToggle() {
         }
     });
 }
-// ====================================================
+// ===========================================
 
-// Login check (dimodifikasi)
+// Login check (modifikasi)
 function checkLogin() {
     if (isBypassActive()) {
         sessionStorage.setItem('owner_logged_in', 'true');
@@ -110,7 +113,34 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// Fetch CSV dan parse
+// ========== FUNGSI APPROVE KE GAS (ANTREAN) ==========
+async function approveJob(uniqueId, buttonElement) {
+    if (!confirm('Setujui lowongan ini? Akan dijadwalkan (maks 8 per jam, jeda 7 menit).')) return;
+    buttonElement.disabled = true;
+    buttonElement.textContent = 'Memproses...';
+    try {
+        const response = await fetch(GAS_WEBAPP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ uniqueId: uniqueId })
+        });
+        const result = await response.json();
+        alert(result.message);
+        if (result.success) {
+            await loadAllData(); // refresh tabel
+        } else {
+            buttonElement.disabled = false;
+            buttonElement.textContent = 'Konfirmasi';
+        }
+    } catch (err) {
+        alert('Error: ' + err.message);
+        buttonElement.disabled = false;
+        buttonElement.textContent = 'Konfirmasi';
+    }
+}
+// =====================================================
+
+// Fetch CSV dan parse (dengan tambahan uniqueId)
 async function loadAllData() {
     try {
         const response = await fetch(CSV_URL);
@@ -134,7 +164,7 @@ async function loadAllData() {
             };
             rawJobs = rows.slice(1).map(row => {
                 const cols = row.split(',');
-                return {
+                const job = {
                     timestamp: col.timestamp !== -1 ? (cols[col.timestamp] || '').trim() : '',
                     email: col.email !== -1 ? (cols[col.email] || '').trim() : '',
                     perusahaan: col.perusahaan !== -1 ? (cols[col.perusahaan] || '').trim() : '',
@@ -145,13 +175,16 @@ async function loadAllData() {
                     deadline: col.deadline !== -1 ? (cols[col.deadline] || '').trim() : '',
                     tipe: col.tipe !== -1 ? (cols[col.tipe] || '').trim() : 'Lainnya'
                 };
+                // TAMBAHKAN UNIQUE ID (gabungan timestamp + email)
+                job.uniqueId = job.timestamp + job.email;
+                return job;
             }).filter(j => j.perusahaan !== '');
         }
         updateUI();
     } catch (err) {
         console.error(err);
         document.querySelectorAll('.kpi-value').forEach(el => el.innerText = 'Error');
-        document.getElementById('recentJobsTable').innerHTML = '<tr><td colspan="4">Gagal memuat数据</tr>';
+        document.getElementById('recentJobsTable').innerHTML = '<tr><td colspan="4">Gagal memuat data</td></tr>';
         document.getElementById('allJobsTable').innerHTML = '<tr><td colspan="7">Error loading</td></tr>';
     }
 }
@@ -200,8 +233,12 @@ function updateUI() {
         recentHtml += `<tr><td>${escapeHtml(j.timestamp)}</td><td>${escapeHtml(j.perusahaan)}</td><td>${escapeHtml(j.posisi)}</td><td>${escapeHtml(j.lokasi)}</td></tr>`;
     });
     document.getElementById('recentJobsTable').innerHTML = recentHtml || '<tr><td colspan="4">Tidak ada data</td></tr>';
+    
+    // Tabel semua lowongan (dengan tombol Konfirmasi jika status belum diatur)
     let allHtml = '';
     rawJobs.forEach((j, idx) => {
+        // Asumsikan status default adalah 'Pending' (belum disetujui)
+        // Jika ingin menampilkan status dari spreadsheet, Anda perlu tambahkan kolom Status di CSV. Untuk sementara, kita berikan tombol konfirmasi untuk semua.
         allHtml += `<tr>
             <td>${escapeHtml(j.timestamp)}</td>
             <td>${escapeHtml(j.email)}</td>
@@ -209,10 +246,22 @@ function updateUI() {
             <td>${escapeHtml(j.posisi)}</td>
             <td>${escapeHtml(j.lokasi)}</td>
             <td>${escapeHtml(j.deadline)}</td>
-            <td><button class="view-btn" data-index="${idx}">Detail</button></td>
+            <td>
+                <button class="btn-confirm" data-uniqueid="${escapeHtml(j.uniqueId)}">Konfirmasi</button>
+                <button class="view-btn" data-index="${idx}">Detail</button>
+            </td>
         </tr>`;
     });
     document.getElementById('allJobsTable').innerHTML = allHtml || '<tr><td colspan="7">Tidak ada data</td></tr>';
+    
+    // Event listener untuk tombol konfirmasi (antrean)
+    document.querySelectorAll('.btn-confirm').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const uniqueId = btn.getAttribute('data-uniqueid');
+            await approveJob(uniqueId, btn);
+        });
+    });
+    // Event listener untuk tombol detail
     document.querySelectorAll('.view-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             let idx = e.target.getAttribute('data-index');
@@ -220,6 +269,7 @@ function updateUI() {
             alert(`Detail Lowongan\n\nPerusahaan: ${job.perusahaan}\nPosisi: ${job.posisi}\nLokasi: ${job.lokasi}\nDeskripsi: ${job.deskripsi.substring(0,200)}...\nEmail: ${job.email}\nDeadline: ${job.deadline}\nTanggal: ${job.timestamp}`);
         });
     });
+    
     const sortedMonths = Object.keys(monthMap).sort();
     const monthLabels = sortedMonths.map(m => m);
     const monthData = sortedMonths.map(m => monthMap[m]);
@@ -262,4 +312,5 @@ function updateUI() {
 
 function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
 
+// Start
 checkLogin();
