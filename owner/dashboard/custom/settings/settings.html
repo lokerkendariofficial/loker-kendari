@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Pengaturan - Owner Dashboard</title>
-    <!-- Menggunakan font dan CSS yang sama dengan dashboard utama -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Style hanya untuk halaman settings, tidak perlu sidebar -->
     <style>
         * {
             margin: 0;
@@ -18,12 +16,8 @@
             background: #f0f2f5;
             color: #1e2a3a;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
         }
-        /* Login Overlay (jika session habis) */
+        /* Login overlay */
         .login-overlay {
             position: fixed;
             top: 0;
@@ -53,16 +47,53 @@
             cursor: pointer;
             font-weight: bold;
         }
-        /* Container kartu pengaturan */
-        .settings-container {
-            max-width: 600px;
-            width: 100%;
+        /* Container utama */
+        .settings-page {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
+        /* Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .page-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+        .header-actions {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+        .refresh-btn {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .update-badge {
+            background: #eef2f7;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #1e2a3a;
+        }
+        /* Kartu pengaturan */
         .card {
             background: white;
             border-radius: 16px;
             padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             border: 1px solid #eef2f6;
         }
         .card-title {
@@ -84,12 +115,6 @@
             border: 1px solid #eef2f6;
             font-family: monospace;
         }
-        .button-group {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
         .btn-secondary {
             background: #1e3a5f;
             color: white;
@@ -108,10 +133,19 @@
             color: #6c757d;
             text-align: center;
         }
+        .back-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            text-decoration: none;
+            color: #1e3a5f;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
-    <!-- Overlay login (muncul jika session habis) -->
     <div id="loginOverlay" class="login-overlay" style="display: none;">
         <div class="login-card">
             <h2>Akses Diperlukan</h2>
@@ -120,76 +154,86 @@
         </div>
     </div>
 
-    <div id="settingsContainer" class="settings-container">
+    <div id="settingsContainer" class="settings-page">
+        <div class="page-header">
+            <h1>Enterprise Dashboard</h1>
+            <div class="header-actions">
+                <button id="refreshTopBtn" class="refresh-btn">⟳ Refresh</button>
+                <span id="lastUpdateBadge" class="update-badge">Update: --</span>
+            </div>
+        </div>
+
         <div class="card">
             <div class="card-title">⚙️ Pengaturan Dashboard</div>
             <p>Dashboard terhubung ke Google Sheets (CSV publik).</p>
             <p>URL CSV:</p>
             <code id="csvUrlDisplay" class="csv-url"></code>
-            <div class="button-group">
-                <button id="refreshDataBtn" class="btn-secondary">⟳ Refresh Data Sekarang</button>
-            </div>
+            <button id="refreshDataBtn" class="btn-secondary">Refresh Data Sekarang</button>
             <div id="statusMessage" class="info-text"></div>
         </div>
+
+        <a href="../../index.html" class="back-link">← Kembali ke Dashboard Utama</a>
     </div>
 
     <script>
-        // ==================== KONFIGURASI ====================
-        // URL CSV dari Google Sheets (sama dengan dashboard utama)
+        // Konfigurasi
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5xtxnptjxh-FIyJuBoCct5vudZFFOeaisUUhT8X0R0kjAkY3f2CtD45CYcZjnPxGh52Og7_AXA756/pub?output=csv';
 
-        // ==================== CEK LOGIN ====================
+        // Cek login
         function checkLogin() {
             const loggedIn = sessionStorage.getItem('owner_logged_in');
             if (loggedIn === 'true') {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('settingsContainer').style.display = 'block';
                 loadSettings();
+                updateTimestamp();
             } else {
                 document.getElementById('loginOverlay').style.display = 'flex';
                 document.getElementById('settingsContainer').style.display = 'none';
             }
         }
 
-        // ==================== TAMPILKAN DATA SETTING ====================
         function loadSettings() {
             document.getElementById('csvUrlDisplay').innerText = CSV_URL;
         }
 
-        // ==================== REFRESH DATA (CSV) ====================
+        function updateTimestamp() {
+            const now = new Date();
+            const formatted = now.toLocaleString('id-ID', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+            document.getElementById('lastUpdateBadge').innerHTML = `Update: ${formatted}`;
+        }
+
         async function refreshData() {
             const statusDiv = document.getElementById('statusMessage');
-            statusDiv.innerHTML = '⏳ Sedang memuat data...';
+            statusDiv.innerHTML = '⏳ Memuat ulang data...';
             try {
                 const response = await fetch(CSV_URL);
                 if (response.ok) {
-                    // Jika fetch berhasil, kita juga bisa mereset localStorage override
-                    // agar data benar-benar segar (opsional)
                     statusDiv.innerHTML = '✅ Data berhasil di-refresh! Data lowongan terbaru telah dimuat.';
+                    updateTimestamp();
                 } else {
                     statusDiv.innerHTML = '❌ Gagal refresh data. Periksa koneksi atau URL CSV.';
                 }
             } catch (error) {
                 statusDiv.innerHTML = '❌ Error: ' + error.message;
             }
-            // Hilangkan pesan setelah 3 detik
             setTimeout(() => {
-                if (statusDiv.innerHTML.includes('berhasil') || statusDiv.innerHTML.includes('Error')) {
+                if (statusDiv.innerHTML.includes('berhasil') || statusDiv.innerHTML.includes('Gagal') || statusDiv.innerHTML.includes('Error')) {
                     statusDiv.innerHTML = '';
                 }
             }, 3000);
         }
 
-        // ==================== REDIRECT KE LOGIN ====================
         function redirectToLogin() {
             window.location.href = '../../index.html';
         }
 
-        // ==================== EVENT LISTENER ====================
+        // Event listeners
         document.getElementById('refreshDataBtn').addEventListener('click', refreshData);
+        document.getElementById('refreshTopBtn').addEventListener('click', refreshData);
         document.getElementById('redirectLoginBtn').addEventListener('click', redirectToLogin);
 
-        // ==================== INIT ====================
+        // Inisialisasi
         checkLogin();
     </script>
 </body>
