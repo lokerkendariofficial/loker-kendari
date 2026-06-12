@@ -4,116 +4,193 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Pengaturan - Owner Dashboard</title>
+    <!-- Menggunakan font dan CSS yang sama dengan dashboard utama -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="settings.css">
+    <!-- Style hanya untuk halaman settings, tidak perlu sidebar -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f2f5;
+            color: #1e2a3a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        /* Login Overlay (jika session habis) */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .login-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 320px;
+            text-align: center;
+        }
+        .login-card button {
+            width: 100%;
+            padding: 0.7rem;
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        /* Container kartu pengaturan */
+        .settings-container {
+            max-width: 600px;
+            width: 100%;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #eef2f6;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1e3a5f;
+            border-bottom: 1px solid #eef2f6;
+            padding-bottom: 0.5rem;
+        }
+        .csv-url {
+            display: block;
+            background: #f8f9fa;
+            padding: 0.75rem;
+            font-size: 0.75rem;
+            word-break: break-all;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border: 1px solid #eef2f6;
+            font-family: monospace;
+        }
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .btn-secondary {
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-secondary:hover {
+            background: #0f2b44;
+        }
+        .info-text {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <div class="login-overlay" id="loginOverlay" style="display: none;">
+    <!-- Overlay login (muncul jika session habis) -->
+    <div id="loginOverlay" class="login-overlay" style="display: none;">
         <div class="login-card">
-            <div class="login-icon">⚙️</div>
             <h2>Akses Diperlukan</h2>
             <p>Silakan login terlebih dahulu</p>
             <button id="redirectLoginBtn">Kembali ke Login Dashboard</button>
         </div>
     </div>
 
-    <div class="settings-container" id="settingsContainer">
-        <div class="app-header">
-            <div class="logo-area">
-                <span class="brand">Loker Kendari®</span>
-                <span class="product">Settings</span>
+    <div id="settingsContainer" class="settings-container">
+        <div class="card">
+            <div class="card-title">⚙️ Pengaturan Dashboard</div>
+            <p>Dashboard terhubung ke Google Sheets (CSV publik).</p>
+            <p>URL CSV:</p>
+            <code id="csvUrlDisplay" class="csv-url"></code>
+            <div class="button-group">
+                <button id="refreshDataBtn" class="btn-secondary">⟳ Refresh Data Sekarang</button>
             </div>
-            <div class="header-menu">
-                <span onclick="location.href='../../index.html'">Dashboard</span>
-                <span>Visualization</span>
-                <span>Capacity</span>
-                <span>Assets</span>
-                <span>Connectivity</span>
-            </div>
-            <div class="header-right">
-                <span id="clock"></span>
-                <button id="logoutBtn" class="logout-icon">🚪</button>
-            </div>
-        </div>
-
-        <div class="main-layout">
-            <aside class="sidebar">
-                <div class="sidebar-search">
-                    <input type="text" placeholder="Search...">
-                </div>
-                <nav class="sidebar-nav">
-                    <ul>
-                        <li class="nav-header">Standard</li>
-                        <li onclick="location.href='../../index.html'">📈 Enterprise Overview</li>
-                        <li>❤️ Enterprise Health</li>
-                        <li>🔮 What-if</li>
-                        <li>📦 Inventory</li>
-                        <li>🗄️ Space</li>
-                        <li>⚡ Power</li>
-                        <li>❄️ Cooling</li>
-                        <li>🔌 Connectivity</li>
-                        <li class="nav-header">Custom</li>
-                        <li onclick="location.href='../../index.html#tab-jobs'">📋 Lowongan</li>
-                        <li onclick="location.href='../../index.html#tab-analytics'">📊 Analytics</li>
-                        <li class="active">⚙️ Settings</li>
-                    </ul>
-                </nav>
-                <div class="sidebar-footer">
-                    <button id="logoutBtnSidebar">Keluar</button>
-                </div>
-            </aside>
-
-            <main class="content">
-                <div class="content-header">
-                    <h1>Pengaturan Dashboard</h1>
-                    <div class="actions">
-                        <button id="refreshSettingsBtn" class="action-btn">⟳ Refresh</button>
-                        <span id="lastUpdateBadge" class="badge">Memuat...</span>
-                    </div>
-                </div>
-
-                <div class="settings-grid">
-                    <div class="card">
-                        <div class="card-title">🔗 Koneksi Data</div>
-                        <p>Dashboard terhubung ke Google Sheets (CSV publik).</p>
-                        <p>URL CSV:</p>
-                        <code id="csvUrlDisplay" class="csv-url"></code>
-                        <div class="button-group">
-                            <button id="testCsvBtn" class="btn-secondary">Uji Koneksi</button>
-                            <button id="forceRefreshBtn" class="btn-secondary">Refresh Data Sekarang</button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">🗄️ Manajemen Data Lowongan</div>
-                        <p>Reset semua perubahan yang tersimpan di browser (override). Data akan kembali ke CSV asli.</p>
-                        <button id="resetLocalStorageBtn" class="btn-danger">Reset Semua Perubahan</button>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">🌐 Menu Pengguna (Publik)</div>
-                        <ul class="public-links">
-                            <li><a href="https://lokerkendariofficial.github.io/loker-kendari/pasang.html" target="_blank">📢 Pasang Iklan</a></li>
-                            <li><a href="https://lokerkendariofficial.github.io/loker-kendari/" target="_blank">🏠 Beranda</a></li>
-                            <li><a href="https://lokerkendariofficial.github.io/loker-kendari/profil.html" target="_blank">👤 Profil</a></li>
-                            <li><a href="#" id="editOwnPostingLink">✏️ Edit Postingan Saya (demo)</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">ℹ️ Informasi Sistem</div>
-                        <ul class="info-list">
-                            <li>Versi Dashboard: <strong>v2.0 (DCIM-style)</strong></li>
-                            <li>Owner: Loker Kendari Official</li>
-                            <li>Teknologi: HTML5, CSS3, JavaScript, Chart.js, Google Sheets (CSV)</li>
-                            <li>Status Login: <span id="loginStatus">Terverifikasi</span></li>
-                        </ul>
-                    </div>
-                </div>
-            </main>
+            <div id="statusMessage" class="info-text"></div>
         </div>
     </div>
 
-    <script src="settings.js"></script>
+    <script>
+        // ==================== KONFIGURASI ====================
+        // URL CSV dari Google Sheets (sama dengan dashboard utama)
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5xtxnptjxh-FIyJuBoCct5vudZFFOeaisUUhT8X0R0kjAkY3f2CtD45CYcZjnPxGh52Og7_AXA756/pub?output=csv';
+
+        // ==================== CEK LOGIN ====================
+        function checkLogin() {
+            const loggedIn = sessionStorage.getItem('owner_logged_in');
+            if (loggedIn === 'true') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('settingsContainer').style.display = 'block';
+                loadSettings();
+            } else {
+                document.getElementById('loginOverlay').style.display = 'flex';
+                document.getElementById('settingsContainer').style.display = 'none';
+            }
+        }
+
+        // ==================== TAMPILKAN DATA SETTING ====================
+        function loadSettings() {
+            document.getElementById('csvUrlDisplay').innerText = CSV_URL;
+        }
+
+        // ==================== REFRESH DATA (CSV) ====================
+        async function refreshData() {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.innerHTML = '⏳ Sedang memuat data...';
+            try {
+                const response = await fetch(CSV_URL);
+                if (response.ok) {
+                    // Jika fetch berhasil, kita juga bisa mereset localStorage override
+                    // agar data benar-benar segar (opsional)
+                    statusDiv.innerHTML = '✅ Data berhasil di-refresh! Data lowongan terbaru telah dimuat.';
+                } else {
+                    statusDiv.innerHTML = '❌ Gagal refresh data. Periksa koneksi atau URL CSV.';
+                }
+            } catch (error) {
+                statusDiv.innerHTML = '❌ Error: ' + error.message;
+            }
+            // Hilangkan pesan setelah 3 detik
+            setTimeout(() => {
+                if (statusDiv.innerHTML.includes('berhasil') || statusDiv.innerHTML.includes('Error')) {
+                    statusDiv.innerHTML = '';
+                }
+            }, 3000);
+        }
+
+        // ==================== REDIRECT KE LOGIN ====================
+        function redirectToLogin() {
+            window.location.href = '../../index.html';
+        }
+
+        // ==================== EVENT LISTENER ====================
+        document.getElementById('refreshDataBtn').addEventListener('click', refreshData);
+        document.getElementById('redirectLoginBtn').addEventListener('click', redirectToLogin);
+
+        // ==================== INIT ====================
+        checkLogin();
+    </script>
 </body>
 </html>
