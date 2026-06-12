@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semua Lowongan - Loker Kendari</title>
+    <meta name="description" content="Daftar semua lowongan kerja terbaru di Kendari dan Sulawesi Tenggara.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://lokerkendariofficial.github.io/loker-kendari/lowongan.html">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="assets/images/logo12_26_15436.png" alt="Loker Kendari" width="200" height="60">
+        </div>
+        <nav>
+            <a href="/">Beranda</a>
+            <a href="lowongan.html">Lowongan</a>
+            <a href="kontak.html">Kontak</a>
+            <a href="pasang.html">Pasang Iklan</a>
+            <a href="profil.html">Profil</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="filter-section">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Cari judul atau perusahaan...">
+                <button id="searchBtn">Cari</button>
+            </div>
+            <div class="categories" id="categories">
+                <button class="category-btn active" data-cat="all">Semua</button>
+                <button class="category-btn" data-cat="IT & Teknologi">IT & Teknologi</button>
+                <button class="category-btn" data-cat="Pemasaran">Pemasaran</button>
+                <button class="category-btn" data-cat="Administrasi">Administrasi</button>
+                <button class="category-btn" data-cat="Pendidikan">Pendidikan</button>
+                <button class="category-btn" data-cat="Lainnya">Lainnya</button>
+            </div>
+        </div>
+
+        <div class="job-grid" id="jobGrid">
+            <p>Memuat lowongan...</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Loker Kendari Official. <a href="privacy.html">Kebijakan Privasi</a> | <a href="sitemap.xml">Sitemap</a></p>
+    </footer>
+
+    <script>
+        let jobsData = [];
+
+        async function loadJobs() {
+            try {
+                const response = await fetch('/assets/data/lowongan.json');
+                const data = await response.json();
+                jobsData = data.lowongan || [];
+                renderJobs(jobsData);
+            } catch (error) {
+                console.error('Gagal memuat lowongan:', error);
+                document.getElementById('jobGrid').innerHTML = '<p>Gagal memuat lowongan. Silakan refresh halaman.</p>';
+            }
+        }
+
+        function renderJobs(jobs) {
+            const jobGrid = document.getElementById('jobGrid');
+            if (jobs.length === 0) {
+                jobGrid.innerHTML = '<p>Tidak ada lowongan yang sesuai.</p>';
+                return;
+            }
+            jobGrid.innerHTML = '';
+            jobs.forEach(job => {
+                const jobCard = document.createElement('article');
+                jobCard.className = 'job-card';
+                jobCard.innerHTML = `
+                    <h3>${escapeHtml(job.title)}</h3>
+                    <div class="company">${escapeHtml(job.company)} - ${escapeHtml(job.location)}</div>
+                    <div class="salary">💰 ${escapeHtml(job.salary || 'Nego')}</div>
+                    <div class="deadline">📅 Deadline: ${escapeHtml(job.deadline)}</div>
+                    <p>${escapeHtml(job.description)}</p>
+                    <div class="meta">
+                        <a href="${escapeHtml(job.link)}" class="btn" aria-label="Detail lowongan ${escapeHtml(job.title)}">Detail →</a>
+                        <span class="date-posted">${escapeHtml(job.date_posted || 'Baru')}</span>
+                    </div>
+                `;
+                jobGrid.appendChild(jobCard);
+            });
+        }
+
+        function filterJobs() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-cat');
+            const filtered = jobsData.filter(job => {
+                const matchSearch = job.title.toLowerCase().includes(searchTerm) || job.company.toLowerCase().includes(searchTerm);
+                let matchCategory = (activeCategory === 'all');
+                if (!matchCategory) {
+                    matchCategory = (job.category && job.category === activeCategory);
+                }
+                return matchSearch && matchCategory;
+            });
+            renderJobs(filtered);
+        }
+
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filterJobs();
+            });
+        });
+        document.getElementById('searchBtn').addEventListener('click', filterJobs);
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') filterJobs();
+        });
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        loadJobs();
+    </script>
+</body>
+</html>
