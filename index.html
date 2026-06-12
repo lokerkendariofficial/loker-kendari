@@ -104,56 +104,70 @@
     <script>
         let jobsData = [];
 
-        // URL CSV dari Google Sheets (sudah dipublikasikan)
+        // URL CSV dari Google Sheets (pastikan sudah dipublikasikan)
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ5xtxnptjxh-FIyJuBoCct5vudZFFOeaisUUhT8X0R0kjAkY3f2CtD45CYcZjnPxGh52Og7_AXA756/pub?output=csv';
 
         async function loadJobs() {
+            const jobGrid = document.getElementById('jobGrid');
             try {
                 const response = await fetch(CSV_URL);
+                if (!response.ok) throw new Error('Gagal mengambil data');
                 const csvText = await response.text();
                 const rows = csvText.split('\n').filter(row => row.trim() !== '');
-                if (rows.length < 2) throw new Error('Data kosong');
+                
+                if (rows.length < 2) {
+                    // Data kosong
+                    jobGrid.innerHTML = `
+                        <div style="text-align:center; padding:2rem;">
+                            <p>✨ Belum ada lowongan terpasang.</p>
+                            <p><a href="pasang.html" class="btn" style="margin-top:1rem;">📢 Pasang Iklan Lowongan</a></p>
+                        </div>`;
+                    return;
+                }
 
                 const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
                 const colIdx = {
-                    timestamp: headers.findIndex(h => h.includes('timestamp')),
-                    email: headers.findIndex(h => h.includes('email')),
                     perusahaan: headers.findIndex(h => h.includes('nama perusahaan') || h.includes('perusahaan')),
                     posisi: headers.findIndex(h => h.includes('posisi') || h.includes('judul')),
                     lokasi: headers.findIndex(h => h.includes('lokasi')),
                     deskripsi: headers.findIndex(h => h.includes('deskripsi')),
                     gaji: headers.findIndex(h => h.includes('gaji') || h.includes('sistem')),
-                    deadline: headers.findIndex(h => h.includes('deadline') || h.includes('batas'))
+                    deadline: headers.findIndex(h => h.includes('deadline') || h.includes('batas')),
+                    timestamp: headers.findIndex(h => h.includes('timestamp'))
                 };
 
                 jobsData = rows.slice(1).map(row => {
-                    // Mengatasi CSV dengan kutipan sederhana
-                    const cols = row.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g) || row.split(',');
+                    // Sederhana split, asumsi tidak ada koma dalam kutipan (untuk data awal sudah cukup)
+                    const cols = row.split(',');
                     return {
-                        title: (colIdx.posisi !== -1 && cols[colIdx.posisi]) ? cols[colIdx.posisi].replace(/^"|"$/g, '').trim() : 'Lowongan',
-                        company: (colIdx.perusahaan !== -1 && cols[colIdx.perusahaan]) ? cols[colIdx.perusahaan].replace(/^"|"$/g, '').trim() : 'Perusahaan',
-                        location: (colIdx.lokasi !== -1 && cols[colIdx.lokasi]) ? cols[colIdx.lokasi].replace(/^"|"$/g, '').trim() : 'Kendari',
-                        deadline: (colIdx.deadline !== -1 && cols[colIdx.deadline]) ? cols[colIdx.deadline].replace(/^"|"$/g, '').trim() : 'Segera',
-                        description: (colIdx.deskripsi !== -1 && cols[colIdx.deskripsi]) ? cols[colIdx.deskripsi].replace(/^"|"$/g, '').trim() : '',
-                        salary: (colIdx.gaji !== -1 && cols[colIdx.gaji]) ? cols[colIdx.gaji].replace(/^"|"$/g, '').trim() : 'Nego',
+                        title: (colIdx.posisi !== -1 && cols[colIdx.posisi]) ? cols[colIdx.posisi].trim() : 'Lowongan',
+                        company: (colIdx.perusahaan !== -1 && cols[colIdx.perusahaan]) ? cols[colIdx.perusahaan].trim() : 'Perusahaan',
+                        location: (colIdx.lokasi !== -1 && cols[colIdx.lokasi]) ? cols[colIdx.lokasi].trim() : 'Kendari',
+                        deadline: (colIdx.deadline !== -1 && cols[colIdx.deadline]) ? cols[colIdx.deadline].trim() : 'Segera',
+                        description: (colIdx.deskripsi !== -1 && cols[colIdx.deskripsi]) ? cols[colIdx.deskripsi].trim() : '',
+                        salary: (colIdx.gaji !== -1 && cols[colIdx.gaji]) ? cols[colIdx.gaji].trim() : 'Nego',
                         link: '#',
                         date_posted: (colIdx.timestamp !== -1 && cols[colIdx.timestamp]) ? cols[colIdx.timestamp].split(' ')[0] : 'Baru'
                     };
                 }).filter(job => job.title && job.title !== 'Lowongan');
 
-                renderJobs(jobsData);
+                if (jobsData.length === 0) {
+                    jobGrid.innerHTML = `<div style="text-align:center; padding:2rem;"><p>Belum ada lowongan. <a href="pasang.html">Pasang iklan</a> sekarang.</p></div>`;
+                } else {
+                    renderJobs(jobsData);
+                }
             } catch (error) {
-                console.error('Gagal memuat lowongan:', error);
-                document.getElementById('jobGrid').innerHTML = '<p>Gagal memuat lowongan. Pastikan URL CSV benar dan data tersedia.</p>';
+                console.error('Error:', error);
+                jobGrid.innerHTML = `
+                    <div style="text-align:center; padding:2rem;">
+                        <p>⚠️ Gagal memuat lowongan. Pastikan koneksi internet lancar.</p>
+                        <p><button onclick="location.reload()" class="btn">Refresh Halaman</button></p>
+                    </div>`;
             }
         }
 
         function renderJobs(jobs) {
             const jobGrid = document.getElementById('jobGrid');
-            if (jobs.length === 0) {
-                jobGrid.innerHTML = '<p>Tidak ada lowongan saat ini.</p>';
-                return;
-            }
             jobGrid.innerHTML = '';
             jobs.forEach(job => {
                 const jobCard = document.createElement('article');
