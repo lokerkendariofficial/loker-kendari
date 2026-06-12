@@ -209,3 +209,23 @@ input:checked + .slider:before {
 .toggle-text {
     font-size: 0.75rem;
 }
+/* ========== TAMBAHAN: Tombol Konfirmasi ========== */
+.btn-confirm {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 0.2rem 0.6rem;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+    margin-right: 0.3rem;
+}
+.btn-confirm:hover {
+    background-color: #1e7e34;
+}
+.btn-confirm:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
