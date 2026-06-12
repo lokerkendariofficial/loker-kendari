@@ -103,81 +103,82 @@
     </footer>
 
     <script>
-        let jobsData = [];
+    let jobsData = [];
 
-        async function loadJobs() {
-            try {
-                const response = await fetch('/assets/data/lowongan.json');
-                const data = await response.json();
-                jobsData = data.lowongan || [];
-                renderJobs(jobsData);
-            } catch (error) {
-                document.getElementById('jobGrid').innerHTML = '<p>Gagal memuat lowongan. Silakan refresh halaman.</p>';
-            }
+    async function loadJobs() {
+        try {
+            const response = await fetch('assets/data/lowongan.json');
+            const data = await response.json();
+            jobsData = data.lowongan || [];
+            renderJobs(jobsData);
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('jobGrid').innerHTML = '<p>Gagal memuat lowongan. Silakan refresh halaman.</p>';
         }
+    }
 
-        function renderJobs(jobs) {
-            const jobGrid = document.getElementById('jobGrid');
-            if (jobs.length === 0) {
-                jobGrid.innerHTML = '<p>Tidak ada lowongan yang sesuai.</p>';
-                return;
-            }
-            jobGrid.innerHTML = '';
-            jobs.forEach(job => {
-                const jobCard = document.createElement('article');
-                jobCard.className = 'job-card';
-                jobCard.innerHTML = `
-                    <h3>${escapeHtml(job.title)}</h3>
-                    <div class="company">${escapeHtml(job.company)} - ${escapeHtml(job.location)}</div>
-                    <div class="salary">💰 ${escapeHtml(job.salary || 'Nego')}</div>
-                    <div class="deadline">📅 Deadline: ${escapeHtml(job.deadline)}</div>
-                    <p>${escapeHtml(job.description)}</p>
-                    <div class="meta">
-                        <a href="${escapeHtml(job.link)}" class="btn" aria-label="Detail lowongan ${escapeHtml(job.title)}">Detail →</a>
-                        <span class="date-posted">${escapeHtml(job.date_posted || 'Baru')}</span>
-                    </div>
-                `;
-                jobGrid.appendChild(jobCard);
-            });
+    function renderJobs(jobs) {
+        const jobGrid = document.getElementById('jobGrid');
+        if (jobs.length === 0) {
+            jobGrid.innerHTML = '<p>Tidak ada lowongan yang sesuai.</p>';
+            return;
         }
-
-        function filterJobs() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-cat');
-            const filtered = jobsData.filter(job => {
-                const matchSearch = job.title.toLowerCase().includes(searchTerm) || job.company.toLowerCase().includes(searchTerm);
-                let matchCategory = (activeCategory === 'all');
-                if (!matchCategory) {
-                    matchCategory = (job.category && job.category === activeCategory);
-                }
-                return matchSearch && matchCategory;
-            });
-            renderJobs(filtered);
-        }
-
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                filterJobs();
-            });
+        jobGrid.innerHTML = '';
+        jobs.forEach(job => {
+            const jobCard = document.createElement('article');
+            jobCard.className = 'job-card';
+            jobCard.innerHTML = `
+                <h3>${escapeHtml(job.title)}</h3>
+                <div class="company">${escapeHtml(job.company)} - ${escapeHtml(job.location)}</div>
+                <div class="salary">💰 ${escapeHtml(job.salary || 'Nego')}</div>
+                <div class="deadline">📅 Deadline: ${escapeHtml(job.deadline)}</div>
+                <p>${escapeHtml(job.description)}</p>
+                <div class="meta">
+                    <a href="${escapeHtml(job.link)}" class="btn" aria-label="Detail lowongan ${escapeHtml(job.title)}">Detail →</a>
+                    <span class="date-posted">${escapeHtml(job.date_posted || 'Baru')}</span>
+                </div>
+            `;
+            jobGrid.appendChild(jobCard);
         });
-        document.getElementById('searchBtn').addEventListener('click', filterJobs);
-        document.getElementById('searchInput').addEventListener('keyup', (e) => {
-            if (e.key === 'Enter') filterJobs();
+    }
+
+    function filterJobs() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-cat');
+        const filtered = jobsData.filter(job => {
+            const matchSearch = job.title.toLowerCase().includes(searchTerm) || job.company.toLowerCase().includes(searchTerm);
+            let matchCategory = (activeCategory === 'all');
+            if (!matchCategory) {
+                matchCategory = (job.category && job.category === activeCategory);
+            }
+            return matchSearch && matchCategory;
         });
+        renderJobs(filtered);
+    }
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterJobs();
+        });
+    });
+    document.getElementById('searchBtn').addEventListener('click', filterJobs);
+    document.getElementById('searchInput').addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') filterJobs();
+    });
 
-        loadJobs();
-    </script>
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    loadJobs();
+</script>
 </body>
 </html>
