@@ -1,0 +1,129 @@
+/* --- GAYA DASAR FORUM --- */
+body {
+    font-family: sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 20px;
+    color: #1e293b;
+}
+
+.form-container {
+    max-width: 650px;
+    background-color: #ffffff;
+    margin: 0 auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+h2 {
+    color: #2563eb;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.form-subtitle {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+/* --- GAYA FIELDSET / KELOMPOK --- */
+fieldset {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #f8fafc;
+}
+
+legend {
+    font-weight: bold;
+    color: #1e293b;
+    padding: 0 8px;
+    font-size: 0.95rem;
+}
+
+/* --- ELEMEN INPUT --- */
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #475569;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="tel"],
+select,
+textarea {
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: #ffffff;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #2563eb;
+}
+
+/* Tata letak dua kolom berdampingan */
+.row {
+    display: flex;
+    gap: 12px;
+}
+
+.col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* --- TOMBOL SUBMIT --- */
+.btn-submit {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+
+.btn-submit:hover {
+    background-color: #1d4ed8;
+}
+
+/* Responsif untuk Layar Kecil HP */
+@media (max-width: 480px) {
+    .row {
+        flex-direction: column;
+        gap: 0;
+    }
+    body {
+        padding: 10px;
+    }
+    .form-container {
+        padding: 15px;
+    }
+}
