@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Loker Kendari Official</title>
+    <style>
+        /* ⬇️ TEMPELKAN SEMUA ISI style.css DI SINI ⬇️ */
+    /* RESET & GLOBAL */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    padding: 40px 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    color: #0f172a;
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #64748b;
+    font-size: 1rem;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s ease;
+    border: 1px solid #e2e8f0;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
+
+.badge {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-fulltime { background-color: #dbeafe; color: #1e40af; }
+.badge-parttime { background-color: #fef3c7; color: #92400e; }
+.badge-magang   { background-color: #e0e7ff; color: #3730a3; }
+
+.company-logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background-color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #475569;
+    margin-bottom: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+.logo-green { background-color: #ecfdf5; color: #065f46; }
+.logo-red   { background-color: #fff1f2; color: #9f1239; }
+
+.job-title {
+    font-size: 1.2rem;
+    color: #1e293b;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.company-name {
+    font-size: 0.95rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.job-details {
+    margin-bottom: 20px;
+    font-size: 0.875rem;
+    color: #475569;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.detail-item span { margin-right: 8px; }
+
+.card-footer {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-date {
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+
+.btn-apply {
+    background-color: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-apply:hover { background-color: #1d4ed8; }
+
+/* DETAIL PAGE STYLES */
+.detail-container {
+    padding: 20px;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+}
+
+.detail-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.detail-card h2 {
+    color: #2563eb;
+    margin-bottom: 8px;
+    font-size: 1.8rem;
+}
+
+.detail-card .company-name-detail {
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 24px;
+    font-size: 1.1rem;
+}
+
+.detail-card h3 {
+    font-size: 1.25rem;
+    margin: 20px 0 12px 0;
+    color: #1e293b;
+    border-left: 4px solid #2563eb;
+    padding-left: 12px;
+}
+
+.detail-card p {
+    line-height: 1.6;
+    margin-bottom: 16px;
+    color: #334155;
+}
+
+.detail-card ul {
+    margin-left: 24px;
+    margin-bottom: 20px;
+}
+
+.detail-card li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 32px;
+    margin-bottom: 16px;
+}
+
+.btn-action {
+    display: block;
+    text-align: center;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.btn-action:hover {
+    filter: brightness(0.92);
+    transform: translateY(-2px);
+}
+
+.btn-wa    { background-color: #22c55e; }
+.btn-email { background-color: #ea4335; }
+.btn-ig    { background-color: #e1306c; }
+.btn-gform { background-color: #1a73e8; }
+
+.back-button {
+    display: inline-block;
+    background-color: white;
+    border: 1px solid #cbd5e1;
+    padding: 10px 18px;
+    border-radius: 40px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.9rem;
+}
+
+.back-button:hover {
+    background-color: #f1f5f9;
+    border-color: #94a3b8;
+}
+    
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Loker Kendari Official</h1>
+    <p>Lowongan kerja terbaru di Kendari dan sekitarnya</p>
+</header>
+
+<div class="container">
+    <div class="card-grid" id="cardGrid"></div>
+</div>
+
+<!-- Tombol + untuk buka forum -->
+<a href="forum.html" class="fab" style="position:fixed; bottom:24px; right:24px; width:56px; height:56px; background:#2563eb; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:bold; text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.2); z-index:1000;">+</a>
+
+<script>
+    /// ======================== FUNGSI-FUNGSI SCRIPT INDEX.HTML ========================
+
+// 1. Fungsi untuk memuat data lowongan default ke localStorage
+function muatDataDefault() {
+    const defaultLowongan = [
+        {
+            id: 1001,
+            job_title: "Admin Gudang & Logistik",
+            company_name: "CV. Makmur Utama Jaya",
+            job_type: "Full-Time",
+            company_logo: "AG",
+            location: "Kadia, Kota Kendari",
+            salary: "Rp 2.500.000 - Rp 3.000.000",
+            description: "Melakukan input data barang masuk dan keluar, membuat laporan berkala stok gudang, dan berkoordinasi dengan tim kurir.",
+            requirements: ["Pendidikan minimal SMA/SMK sederajat", "Menguasai Microsoft Excel (Basic)", "Teliti, jujur, dan bertanggung jawab"],
+            link_wa: "628123456789",
+            link_email: "hrd@perusahaan.com",
+            link_ig: "@akun_perusahaan",
+            link_gform: "https://forms.gle/contohFormulirPendaftaran",
+            posted_at: "Baru saja"
+        },
+        {
+            id: 1002,
+            job_title: "Kasir & Pramuniaga",
+            company_name: "Kopi Dari Hati Kendari",
+            job_type: "Full-Time",
+            company_logo: "K",
+            location: "Korumba, Kota Kendari",
+            salary: "Rp 1.800.000 / bulan",
+            description: "Melayani pelanggan, mengelola transaksi kasir, menjaga kebersihan area.",
+            requirements: ["Ramah", "Jujur", "Bisa bekerja shift"],
+            link_wa: "628123456788",
+            link_email: "kopi@hati.com",
+            link_ig: "@kopidarihati",
+            link_gform: "",
+            posted_at: "1 jam yang lalu"
+        },
+        {
+            id: 1003,
+            job_title: "Graphic Designer (Magang/Part)",
+            company_name: "Digital Creative Agency",
+            job_type: "Part-Time",
+            company_logo: "GD",
+            location: "Wua-Wua, Kota Kendari",
+            salary: "Kompetitif",
+            description: "Mendesain konten sosial media, poster, dan kebutuhan branding klien.",
+            requirements: ["Menguasai Photoshop/Illustrator", "Kreatif", "Memiliki portofolio"],
+            link_wa: "628123456787",
+            link_email: "info@creative.com",
+            link_ig: "@creativeagency",
+            link_gform: "",
+            posted_at: "Kemarin"
+        }
+    ];
+    localStorage.setItem('daftarLowongan', JSON.stringify(defaultLowongan));
+}
+
+// 2. Fungsi untuk mengamankan teks dari karakter HTML (XSS prevention)
+function amankanHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+// 3. Fungsi untuk menampilkan semua kartu lowongan dari localStorage
+function tampilkanSemuaKartu() {
+    console.log("tampilkanSemuaKartu dipanggil");
+    let data = localStorage.getItem('daftarLowongan');
+    if (!data) {
+        console.log("localStorage kosong, memuat data default");
+        muatDataDefault();
+        data = localStorage.getItem('daftarLowongan');
+    }
+    const daftarLowongan = JSON.parse(data);
+    const grid = document.getElementById('cardGrid');
+    if (!grid) {
+        console.error("Element #cardGrid tidak ditemukan!");
+        return;
+    }
+    grid.innerHTML = '';
+
+    daftarLowongan.forEach(lowongan => {
+        let kelasBadge = 'badge-fulltime';
+        if (lowongan.job_type === 'Part-Time') kelasBadge = 'badge-parttime';
+        if (lowongan.job_type === 'Magang') kelasBadge = 'badge-magang';
+
+        let kelasLogo = '';
+        if (lowongan.company_logo === 'K') kelasLogo = 'logo-green';
+        else if (lowongan.company_logo === 'GD') kelasLogo = 'logo-red';
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <span class="badge ${kelasBadge}">${lowongan.job_type}</span>
+            <div class="company-logo ${kelasLogo}">${amankanHtml(lowongan.company_logo)}</div>
+            <h3 class="job-title">${amankanHtml(lowongan.job_title)}</h3>
+            <p class="company-name">${amankanHtml(lowongan.company_name)}</p>
+            <div class="job-details">
+                <div class="detail-item"><span>📍</span> ${amankanHtml(lowongan.location)}</div>
+                <div class="detail-item"><span>💰</span> ${amankanHtml(lowongan.salary)}</div>
+            </div>
+            <div class="card-footer">
+                <span class="post-date">${amankanHtml(lowongan.posted_at)}</span>
+                <button class="btn-apply btn-detail" data-id="${lowongan.id}">Detail</button>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+
+    // Pasang event listener untuk setiap tombol Detail
+    document.querySelectorAll('.btn-detail').forEach(tombol => {
+        tombol.addEventListener('click', (e) => {
+            const id = parseInt(tombol.getAttribute('data-id'));
+            const lowonganDipilih = daftarLowongan.find(l => l.id === id);
+            if (lowonganDipilih) tampilkanDetailLowongan(lowonganDipilih);
+        });
+    });
+}
+
+// 4. Fungsi untuk menampilkan halaman detail lowongan (dengan tombol salin)
+function tampilkanDetailLowongan(lowongan) {
+    const header = document.querySelector('header');
+    const container = document.querySelector('.container');
+    header.style.display = 'none';
+    container.style.display = 'none';
+
+    const existingDetail = document.getElementById('dynamic-detail-container');
+    if (existingDetail) existingDetail.remove();
+
+    const bungkusDetail = document.createElement('div');
+    bungkusDetail.id = 'dynamic-detail-container';
+    bungkusDetail.className = 'detail-container';
+
+    // Tombol kembali
+    const tombolKembali = document.createElement('button');
+    tombolKembali.innerText = '⬅️ Kembali ke Daftar Loker';
+    tombolKembali.className = 'back-button';
+    tombolKembali.onclick = () => {
+        bungkusDetail.remove();
+        header.style.display = 'block';
+        container.style.display = 'block';
+        window.scrollTo(0, 0);
+    };
+
+    const kartuDetail = document.createElement('div');
+    kartuDetail.className = 'detail-card';
+
+    // === Tombol Salin Teks ===
+    const tombolSalin = document.createElement('button');
+    tombolSalin.innerText = '📋 Salin Teks Lowongan';
+    tombolSalin.style.cssText = `
+        background-color: #e2e8f0;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-bottom: 20px;
+        transition: 0.2s;
+        color: #1e293b;
+    `;
+    tombolSalin.onmouseover = () => tombolSalin.style.backgroundColor = '#cbd5e1';
+    tombolSalin.onmouseout = () => tombolSalin.style.backgroundColor = '#e2e8f0';
+
+    // Fungsi salin teks ke clipboard
+    tombolSalin.onclick = async () => {
+        let teksSyarat = lowongan.requirements.map(r => `- ${r}`).join('\n');
+        let teksKontak = '';
+        if (lowongan.link_wa) teksKontak += `WhatsApp: https://wa.me/${lowongan.link_wa}\n`;
+        if (lowongan.link_email) teksKontak += `Email: ${lowongan.link_email}\n`;
+        if (lowongan.link_ig) teksKontak += `Instagram: https://instagram.com/${lowongan.link_ig.replace('@','')}\n`;
+        if (lowongan.link_gform) teksKontak += `Google Form: ${lowongan.link_gform}\n`;
+        if (!teksKontak) teksKontak = 'Tidak ada kontak tersedia';
+
+        const teksLengkap = `
+*${lowongan.job_title}*
+${lowongan.company_name}
+
+📋 Deskripsi Pekerjaan:
+${lowongan.description}
+
+📌 Syarat Pendaftaran:
+${teksSyarat}
+
+🔗 Jalur Pendaftaran:
+${teksKontak}
+        `.trim();
+
+        try {
+            await navigator.clipboard.writeText(teksLengkap);
+            const teksAsli = tombolSalin.innerText;
+            tombolSalin.innerText = '✅ Tersalin!';
+            setTimeout(() => { tombolSalin.innerText = teksAsli; }, 2000);
+        } catch (err) {
+            alert('Gagal menyalin teks. Silakan salin manual.');
+        }
+    };
+    // === Akhir Tombol Salin ===
+
+    // Daftar persyaratan dalam HTML
+    const daftarSyarat = lowongan.requirements.map(req => `<li>${amankanHtml(req)}</li>`).join('');
+
+    // Tombol aksi (WA, Email, IG, Google Form)
+    let tombolWA = '', tombolEmail = '', tombolIG = '', tombolGform = '';
+    if (lowongan.link_wa) tombolWA = `<a href="https://wa.me/${lowongan.link_wa}" target="_blank" class="btn-action btn-wa">💬 Kirim Lamaran via WhatsApp</a>`;
+    if (lowongan.link_email) tombolEmail = `<a href="mailto:${lowongan.link_email}?subject=Lamaran%20Kerja%20-%20${encodeURIComponent(lowongan.job_title)}" class="btn-action btn-email">✉️ Kirim Lamaran via Email</a>`;
+    if (lowongan.link_ig) tombolIG = `<a href="https://instagram.com/${lowongan.link_ig.replace('@','')}" target="_blank" class="btn-action btn-ig">📸 Kirim Lamaran via Instagram</a>`;
+    if (lowongan.link_gform) tombolGform = `<a href="${lowongan.link_gform}" target="_blank" class="btn-action btn-gform">📝 Kirim Lamaran via Google Dokumen</a>`;
+
+    kartuDetail.innerHTML = `
+        <h2>${amankanHtml(lowongan.job_title)}</h2>
+        <div class="company-name-detail">${amankanHtml(lowongan.company_name)}</div>
+        <h3>📋 Deskripsi Pekerjaan</h3>
+        <p>${amankanHtml(lowongan.description)}</p>
+        <h3>📌 Syarat Pendaftaran</h3>
+        <ul>${daftarSyarat}</ul>
+        <div class="action-buttons">
+            ${tombolWA}
+            ${tombolEmail}
+            ${tombolIG}
+            ${tombolGform}
+        </div>
+    `;
+
+    // Letakkan tombol salin di awal kartu
+    kartuDetail.insertBefore(tombolSalin, kartuDetail.firstChild);
+
+    bungkusDetail.appendChild(tombolKembali);
+    bungkusDetail.appendChild(kartuDetail);
+    document.body.appendChild(bungkusDetail);
+    window.scrollTo(0, 0);
+}
+
+// 5. Menjalankan tampilan kartu saat halaman dimuat
+document.addEventListener('DOMContentLoaded', tampilkanSemuaKartu);
+</script>
+
+</body>
+</html>
