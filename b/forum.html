@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Input Lowongan Kerja</title>
+    <link rel="stylesheet" href="forum.css">
+</head>
+<body>
+
+<div class="form-container">
+    <h2>📝 Tambah Lowongan Kerja Baru</h2>
+    <p class="form-subtitle">Isi formulir di bawah ini untuk membuat lowongan baru. Data akan langsung muncul di halaman utama.</p>
+
+    <form id="formLowongan">
+        <fieldset>
+            <legend>🪪 1. Informasi Kartu Lowongan</legend>
+            <div class="form-group">
+                <label for="job-title">Nama Pekerjaan / Posisi</label>
+                <input type="text" id="job-title" required>
+            </div>
+            <div class="form-group">
+                <label for="company-name">Nama Perusahaan</label>
+                <input type="text" id="company-name" required>
+            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <label for="job-type">Tipe Pekerjaan</label>
+                    <select id="job-type" required>
+                        <option value="Full-Time">Full-Time</option>
+                        <option value="Part-Time">Part-Time</option>
+                        <option value="Magang">Magang</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="company-logo">Inisial Logo (Maks 2 Huruf)</label>
+                    <input type="text" id="company-logo" maxlength="2" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col">
+                    <label for="location">Lokasi (Kecamatan / Kota)</label>
+                    <input type="text" id="location" required>
+                </div>
+                <div class="col">
+                    <label for="salary">Rentang Gaji</label>
+                    <input type="text" id="salary" required>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>📄 2. Konten Rincian Pekerjaan</legend>
+            <div class="form-group">
+                <label for="description">Deskripsi Pekerjaan</label>
+                <textarea id="description" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="requirements">Syarat Pendaftaran (pisahkan dengan koma)</label>
+                <textarea id="requirements" rows="4" placeholder="Contoh: Pendidikan minimal SMA, Menguasai Excel, Jujur" required></textarea>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>🔗 3. Jalur Pendaftaran & Kontak</legend>
+            <div class="form-group">
+                <label for="link-wa">Nomor WhatsApp (contoh: 628123456789)</label>
+                <input type="tel" id="link-wa">
+            </div>
+            <div class="form-group">
+                <label for="link-email">Alamat Email Perusahaan</label>
+                <input type="email" id="link-email">
+            </div>
+            <div class="form-group">
+                <label for="link-ig">Username / Link Instagram</label>
+                <input type="text" id="link-ig" placeholder="@akun_perusahaan">
+            </div>
+            <div class="form-group">
+                <label for="link-gform">Link Google Formulir / Dokumen</label>
+                <input type="url" id="link-gform">
+            </div>
+        </fieldset>
+
+        <button type="submit" class="btn-submit">🚀 Posting Lowongan</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('formLowongan').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const job_title = document.getElementById('job-title').value;
+        const company_name = document.getElementById('company-name').value;
+        const job_type = document.getElementById('job-type').value;
+        const company_logo = document.getElementById('company-logo').value.toUpperCase();
+        const location = document.getElementById('location').value;
+        const salary = document.getElementById('salary').value;
+        const description = document.getElementById('description').value;
+        const requirementsRaw = document.getElementById('requirements').value;
+        const requirements = requirementsRaw.split(',').map(s => s.trim());
+        const link_wa = document.getElementById('link-wa').value;
+        const link_email = document.getElementById('link-email').value;
+        const link_ig = document.getElementById('link-ig').value;
+        const link_gform = document.getElementById('link-gform').value;
+
+        const newJob = {
+            id: Date.now(),
+            job_title, company_name, job_type, company_logo,
+            location, salary, description, requirements,
+            link_wa, link_email, link_ig, link_gform,
+            posted_at: "Baru saja"
+        };
+
+        let existing = localStorage.getItem('daftarLowongan');
+        let jobs = existing ? JSON.parse(existing) : [];
+        jobs.push(newJob);
+        localStorage.setItem('daftarLowongan', JSON.stringify(jobs));
+
+        alert('Lowongan berhasil ditambahkan!');
+        window.location.href = 'index.html';
+    });
+</script>
+
+</body>
+</html>
